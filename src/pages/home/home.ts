@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { HttpModule, Http } from '@angular/http';
 import { ComponentsModule } from '../../components/components.module'
 import { MenuController } from 'ionic-angular';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
@@ -9,9 +10,11 @@ import { FirebaseProvider } from '../../providers/firebase/firebase';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  private people: [];
-  private planets: [];
-  private ports: [];
+  private people: any[];
+  private planets: any[];
+  private ports: any[];
+  private hidemap: boolean = false;
+  private hidelist: boolean = true;
 
   constructor(public navCtrl: NavController, public menuCtrl: MenuController, private firebaseProvider: FirebaseProvider) {
     this.firebaseProvider.getObservable().subscribe(() => {
@@ -31,5 +34,15 @@ export class HomePage {
   openMenu() {
     this.menuCtrl.open();
     console.log("opening menu")
+  }
+  goToListView(){
+    this.hidemap = true;
+    this.hidelist = false;
+    //add border-bottom style change
+  }
+  goToMapView(){
+    this.hidelist = true;
+    this.hidemap = false;
+    //add border-bottom style change
   }
 }

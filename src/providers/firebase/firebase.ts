@@ -4,13 +4,13 @@ import { Observable } from 'rxjs/Observable';
 import firebase from 'firebase';
 
 var firebaseConfig = {
-    apiKey: "AIzaSyBwMK5WTk8xSE3TGtf4uCn3rdePPzd2cYY",
-    authDomain: "mission-ctrl-37ebc.firebaseapp.com",
-    databaseURL: "https://mission-ctrl-37ebc.firebaseio.com",
-    projectId: "mission-ctrl-37ebc",
-    storageBucket: "mission-ctrl-37ebc.appspot.com",
-    messagingSenderId: "887433729015"
-  };
+  apiKey: "AIzaSyBwMK5WTk8xSE3TGtf4uCn3rdePPzd2cYY",
+  authDomain: "mission-ctrl-37ebc.firebaseapp.com",
+  databaseURL: "https://mission-ctrl-37ebc.firebaseio.com",
+  projectId: "mission-ctrl-37ebc",
+  storageBucket: "mission-ctrl-37ebc.appspot.com",
+  messagingSenderId: "887433729015"
+};
 
 @Injectable()
 export class FirebaseProvider {
@@ -22,7 +22,6 @@ export class FirebaseProvider {
   private clientObservable: Observable<any[]>;
 
   constructor() {
-    console.log('Hello FirebaseProvider Provider');
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.database();
 

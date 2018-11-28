@@ -7,18 +7,45 @@
 // secondary-dark: #4f9a94
 
 page-home {
-  ion-icon {
-    font-size: 30px;
-    padding: 10px;
-  }
-  .headerItems{
-    display:flex;
-    flex-flow:row;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 70px;
-  }
-  // .headerItem {
-  //
-  // }
+
+      ion-icon {
+        font-size: 30px;
+        padding: 10px;
+      }
+      .headerItems{
+        display:flex;
+        flex-flow:row;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 70px;
+      }
+      .menu-content {
+        padding: 20px;
+        width: 100%;
+      }
+      .menu-items{
+        padding: 40px 0 0 0;
+        display:flex;
+        flex-flow: column;
+        justify-content:left;
+      }
+      .profile-content{
+        display: flex;
+        flex-flow: row;
+        justify-content: left;
+        align-items: center;
+      }
+      .profile-image {
+        margin: 20px;
+        height: 40px;
+        width: 40px;
+        border-radius: 40px;
+      }
+      .profile-name{
+        margin: 0;
+      }
+
+      // .headerItem {
+      //
+      // }
 }

@@ -1,12 +1,11 @@
-
 <ion-header>
   <ion-navbar>
     <ion-buttons class="headerItems">
       <button slot="start" ion-button (click)="openMenu()" clear>
-        <ion-icon id="menu" name="menu"></ion-icon>
+        <ion-icon name="menu"></ion-icon>
       </button>
-      <button class="headerItem" ion-button clear>Map</button>
-      <button class="headerItem" ion-button clear>List</button>
+      <button class="headerItem" ion-button clear (click)="goToMapView()">Map</button>
+      <button class="headerItem" ion-button clear (click)="goToListView()">List</button>
       <button ion-button slot="end"  clear>
         <ion-icon id="search" name="search"></ion-icon>
       </button>
@@ -15,13 +14,28 @@
 </ion-header>
 
 <ion-menu persistent="true" type="overlay" [content]="mycontent">
-  <button slot="end" ion-button (click)="closeMenu()" clear>
-    <ion-icon id="closeMenu" name="close"></ion-icon>
-  </button>
+  <ion-content class = "menu-content">
+    <button slot="end" ion-button (click)="closeMenu()" clear>
+      <ion-icon name="close"></ion-icon>
+    </button>
+    <ion-list>
+      <ion-row class="profile-content">
+        <img class="profile-image" src="../../assets/imgs/logo.png"/>
+        <h1 class= "profile-name" >User Name</h1>
+      </ion-row>
+      <ion-buttons class="menu-items">
+        <button ion-button clear >Supply Status</button>
+        <button ion-button clear >Location</button>
+        <button ion-button clear >Travelers Nearby</button>
+        <button ion-button clear >Settings</button>
+      </ion-buttons>
+    </ion-list>
+  </ion-content>
 </ion-menu>
 <ion-nav #mycontent [root]="rootPage"></ion-nav>
 
-
 <ion-content padding>
-  <app-map></app-map>
+  <list-view [hidden]='hidelist'></list-view>
+  <app-map [hidden]='hidemap'></app-map>
+
 </ion-content>
