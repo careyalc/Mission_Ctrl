@@ -15,8 +15,8 @@ export class mapComponent implements OnInit {
 
     @ViewChild('mapCanvas') mapCanvas;
 
-    private width: number = 350;
-    private height: number = 600;
+    private width: number = window.innerWidth;
+    private height: number = window.innerHeight;
 
     private scene: THREE.Scene = new THREE.Scene();
     private camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
@@ -33,6 +33,9 @@ export class mapComponent implements OnInit {
     private spaceport: THREE.Mesh;
     private traveller: THREE.Mesh;
     private animationDisplay;
+
+    private raycaster = new THREE.Raycaster();
+    private mouse = new THREE.Vector2();
 
     constructor(private element: ElementRef, private ngRenderer: Renderer2) {
     }
@@ -117,6 +120,7 @@ export class mapComponent implements OnInit {
     }
 
     update(): void {
+      //planet movements
         this.planet1.rotateY(0.01);
         this.planet2.rotateY(0.01);
         this.planet3.rotateY(0.01);
@@ -151,6 +155,7 @@ export class mapComponent implements OnInit {
         return new THREE.Mesh(geometry, material);
     }
 
+    //make planets
     createPlanet(size, texture): THREE.Mesh {
       var geometry = new THREE.SphereGeometry( size, size, size );
       var material = new THREE.MeshBasicMaterial( {map:texture} );
