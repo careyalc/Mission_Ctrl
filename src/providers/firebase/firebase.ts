@@ -29,52 +29,60 @@ export class FirebaseProvider {
         this.serviceObserver = e;
       });
 
-      let peopleRef = this.db.ref('/people');
-      peopleRef.on('value', snapshot => {
-        this.people = [];
-        snapshot.forEach(childSnapshot => {
-          let person = {
-            key: childSnapshot.key,
-            name: childSnapshot.val().name,
-            active: childSnapshot.val().active,
-            friendly: childSnapshot.val().friendly,
-            money: childSnapshot.val().money,
-            supplies: childSnapshot.val().supplies,
-          };
-          this.people.push(person);
-        });
+    let peopleRef = this.db.ref('/people');
+    peopleRef.on('value', snapshot => {
+      this.people= [];
+      snapshot.forEach(childSnapshot => {
+        let person = {
+          key: childSnapshot.key,
+          name: childSnapshot.val().name,
+          active: childSnapshot.val().active,
+          friendly: childSnapshot.val().friendly,
+          money: childSnapshot.val().money,
+          supplies: childSnapshot.val().supplies,
+          photo: childSnapshot.val().photo
+        };
+        this.people.push(person);
       });
-      let portRef = this.db.ref('/ports');
-      portRef.on('value', snapshot => {
-        this.ports = [];
-        snapshot.forEach(childSnapshot => {
-          let port = {
-            key: childSnapshot.key,
-            planet: childSnapshot.val().planet,
-            rating: childSnapshot.val().rating,
-            type: childSnapshot.val().type,
-            quantity: childSnapshot.val().quantity,
-            cost: childSnapshot.val().cost,
-          };
-          this.ports.push(port);
-        });
+      console.log("people from service", this.people)
+      this.notifySubscribers();
+    });
+    let portRef = this.db.ref('/ports');
+    portRef.on('value', snapshot => {
+      this.ports= [];
+      snapshot.forEach(childSnapshot => {
+        let port = {
+          key: childSnapshot.key,
+          planet: childSnapshot.val().planet,
+          rating: childSnapshot.val().rating,
+          type: childSnapshot.val().type,
+          quantity: childSnapshot.val().quantity,
+          cost: childSnapshot.val().cost,
+        };
+        this.ports.push(port);
       });
-      let planetRef = this.db.ref('/planets');
-      planetRef.on('value', snapshot => {
-        this.planets = [];
-        snapshot.forEach(childSnapshot => {
-          let planet = {
-            key: childSnapshot.key,
-            name: childSnapshot.val().name,
-            ports: childSnapshot.val().ports,
-            friendly: childSnapshot.val().friendly,
-            x: childSnapshot.val().x,
-            y: childSnapshot.val().y,
-            z: childSnapshot.val().z
-          };
-          this.planets.push(planet);
-        });
+      console.log("ports from service", this.ports)
+      this.notifySubscribers();
+    });
+    let planetRef = this.db.ref('/planets');
+    planetRef.on('value', snapshot => {
+      this.planets = [];
+      snapshot.forEach(childSnapshot => {
+        let planet = {
+          key: childSnapshot.key,
+          name: childSnapshot.val().name,
+          ports: childSnapshot.val().ports,
+          photo: childSnapshot.val().photo,
+          friendly: childSnapshot.val().friendly,
+          x: childSnapshot.val().x,
+          y: childSnapshot.val().y,
+          z: childSnapshot.val().z
+        };
+        this.planets.push(planet);
       });
+      console.log("planets from service", this.planets)
+      this.notifySubscribers();
+    });
   }
 
   public getObservable(): Observable<any[]> {
@@ -84,23 +92,24 @@ export class FirebaseProvider {
   private notifySubscribers(): void {
     this.serviceObserver.next(undefined);
   }
-
   public getPlanets():any[] {
-    let entriesClone = JSON.parse(JSON.stringify(this.planets));
+    let entriesClone = this.planets;
+    // let entriesClone = JSON.parse(JSON.stringify(this.planets));
     console.log("Someone got my planets! They got: ", entriesClone);
     return entriesClone;
   }
   public getPeople():any[] {
-    let entriesClone = JSON.parse(JSON.stringify(this.people));
+    let entriesClone = this.people;
+    // let entriesClone = JSON.parse(JSON.stringify(this.people));
     console.log("Someone got my people! They got: ", entriesClone);
     return entriesClone;
   }
   public getPorts():any[] {
-    let entriesClone = JSON.parse(JSON.stringify(this.ports));
+    let entriesClone = this.ports;
+    // let entriesClone = JSON.parse(JSON.stringify(this.ports));
     console.log("Someone got my ports! They got: ", entriesClone);
     return entriesClone;
   }
-
   private findSupplyByName(name: string): any {
     for (let e of this.ports) {
       if (e.type === name) {

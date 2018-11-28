@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FirebaseProvider } from '../../providers/firebase/firebase';
 
 @Component({
   selector: 'list-view',
@@ -6,11 +7,16 @@ import { Component } from '@angular/core';
 })
 export class ListViewComponent {
 
-  text: string;
+  public people: any[];
+  public planets: any[];
+  public ports: any[];
 
-  constructor() {
-    console.log('Hello ListViewComponent Component');
-    this.text = 'Hello World';
+  constructor(private firebaseProvider: FirebaseProvider) {
+    this.firebaseProvider.getObservable().subscribe(() => {
+      this.people = this.firebaseProvider.getPeople();
+      this.ports = this.firebaseProvider.getPorts();
+      this.planets = this.firebaseProvider.getPlanets();
+    });
   }
 
 }

@@ -10,9 +10,9 @@ import { FirebaseProvider } from '../../providers/firebase/firebase';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  private people: any[];
-  private planets: any[];
-  private ports: any[];
+  public people: any[];
+  public planets: any[];
+  public ports: any[];
   private hidemap: boolean = false;
   private hidelist: boolean = true;
 
@@ -22,7 +22,6 @@ export class HomePage {
       this.ports = this.firebaseProvider.getPorts();
       this.planets = this.firebaseProvider.getPlanets();
     });
-
   }
   // private saveToFirebase() {
   // }
