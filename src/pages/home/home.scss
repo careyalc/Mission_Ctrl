@@ -1,3 +1,57 @@
-page-home {
+// COLORS
+// primary: #37474f
+// primary-light: #62727b
+// primary-dark: #102027
+// secondary: #80cbc4
+// secondary-light:#b2fef7
+// secondary-dark: #4f9a94
 
+page-home {
+  app-map{
+    margin:0;
+    position: absolute;
+    top:0;
+    left:0;
+    overflow:hidden;
+  }
+  ion-icon {
+    font-size: 30px;
+    padding: 10px;
+  }
+  .headerItems{
+    display:flex;
+    flex-flow:row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 70px;
+  }
+  .menu-content {
+    padding: 20px;
+    width: 100%;
+  }
+  .menu-items{
+    padding: 40px 0 0 0;
+    display:flex;
+    flex-flow: column;
+    justify-content:left;
+  }
+  .profile-content{
+    display: flex;
+    flex-flow: row;
+    justify-content: left;
+    align-items: center;
+  }
+  .profile-image {
+    margin: 20px;
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+  }
+  .profile-name{
+    margin: 0;
+  }
+
+  // .headerItem {
+  //
+  // }
 }

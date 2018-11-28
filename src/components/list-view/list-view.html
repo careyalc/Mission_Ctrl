@@ -1,0 +1,16 @@
+<ion-list>
+  <H1> People </H1>
+  <ion-item *ngFor="let person of people">
+    <p> {{person.name}} </p>
+  </ion-item>
+  <H1> Planets </H1>
+  <ion-item *ngFor="let planet of planets">
+    <p> {{planet.name}} </p>
+  </ion-item>
+  <H1> Ports </H1>
+  <ion-item *ngFor="let port of ports">
+    <p> {{port.key}}</p>
+    <p> Supplies: {{port.type}}</p>
+    <p> Location: planet {{port.planet}}</p>
+  </ion-item>
+</ion-list>
