@@ -15,9 +15,9 @@ var firebaseConfig = {
 @Injectable()
 export class FirebaseProvider {
   private db: any;
-  private people: [];
-  private planets: [];
-  private ports: [];
+  private people: any[];
+  private planets: any[];
+  private ports: any[];
   private serviceObserver: Observer<any[]>;
   private clientObservable: Observable<any[]>;
 
