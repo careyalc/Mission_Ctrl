@@ -1,10 +1,26 @@
+
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-buttons class="headerItems">
+      <button slot="start" ion-button (click)="openMenu()" clear>
+        <ion-icon id="menu" name="menu"></ion-icon>
+      </button>
+      <button class="headerItem" ion-button clear>Map</button>
+      <button class="headerItem" ion-button clear>List</button>
+      <button ion-button slot="end"  clear>
+        <ion-icon id="search" name="search"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
+
+<ion-menu persistent="true" type="overlay" [content]="mycontent">
+  <button slot="end" ion-button (click)="closeMenu()" clear>
+    <ion-icon id="closeMenu" name="close"></ion-icon>
+  </button>
+</ion-menu>
+<ion-nav #mycontent [root]="rootPage"></ion-nav>
+
 
 <ion-content padding>
   <app-map></app-map>

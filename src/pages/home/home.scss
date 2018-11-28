@@ -1,3 +1,24 @@
-page-home {
+// COLORS
+// primary: #37474f
+// primary-light: #62727b
+// primary-dark: #102027
+// secondary: #80cbc4
+// secondary-light:#b2fef7
+// secondary-dark: #4f9a94
 
+page-home {
+  ion-icon {
+    font-size: 30px;
+    padding: 10px;
+  }
+  .headerItems{
+    display:flex;
+    flex-flow:row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 70px;
+  }
+  // .headerItem {
+  //
+  // }
 }

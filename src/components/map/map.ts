@@ -26,8 +26,10 @@ export class mapComponent implements OnInit {
     // private controls: OrbitControls = new OrbitControls(this.camera);
 
     private effect: VREffect;
-
-    private planet: THREE.Mesh;
+    private enterVR;
+    private planet1: THREE.Mesh;
+    private planet2: THREE.Mesh;
+    private planet3: THREE.Mesh;
     private spaceport: THREE.Mesh;
     private traveller: THREE.Mesh;
     private animationDisplay;
@@ -122,11 +124,11 @@ export class mapComponent implements OnInit {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         this.effect.render(this.scene, this.camera);
-        // if(this.enterVR.isPresenting()){
-        //
-        // } else {
-        //     this.renderer.render(this.scene, this.camera);
-        // }
+        if(this.enterVR.isPresenting()){
+
+        } else {
+            this.renderer.render(this.scene, this.camera);
+        }
         this.animationDisplay.requestAnimationFrame(() => {
             this.update();
         });
