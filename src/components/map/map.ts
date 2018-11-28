@@ -54,16 +54,19 @@ export class mapComponent implements OnInit {
         loader.load('../../assets/textures/planet_1.jpg', (texture) => {
             this.planet1 = this.createPlanet(0.15, texture);
             this.planet1.position.set(-.3, 1.2, -1);
+            this.planet1.name = "planet1"
             this.scene.add(this.planet1);
         });
         loader.load('../../assets/textures/planet_2.jpg', (texture) => {
             this.planet2 = this.createPlanet(0.08, texture);
             this.planet2.position.set(0, 3, -3);
+            this.planet2.name = "planet2"
             this.scene.add(this.planet2);
         });
         loader.load('../../assets/textures/planet_3.jpg', (texture) => {
             this.planet3 = this.createPlanet(0.05, texture);
             this.planet3.position.set(0, 1, -1);
+            this.planet3.name = "planet3"
             this.scene.add(this.planet3);
         });
 
@@ -182,17 +185,20 @@ export class mapComponent implements OnInit {
       return new THREE.Mesh( geometry, material );
     }
 
-
     onSelect(event) {
-    	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 ;
+    	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.scene.children );
       for ( var i = 0; i < intersects.length; i++ ) {
-        console.log("intersects", intersects[ i ].distance);
-        intersects[ i ].object.material.color.set( 0xff0000 );
+        if (intersects[ i ].object.name){
+          console.log("intersects", intersects[ i ].object.name);
+          //function to toggle on a pop up for that planet
+        }
       }
     }
-
+    // showPlanetDetails(){
+    //
+    // }
 
 }
