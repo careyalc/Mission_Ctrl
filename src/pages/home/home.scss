@@ -12,7 +12,7 @@ page-home {
     position: absolute;
     top:0;
     left:0;
-    scroll:none;
+    overflow:hidden;
   }
   ion-icon {
     font-size: 30px;

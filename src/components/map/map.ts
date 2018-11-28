@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
 
 import * as THREE from 'three';
+import { Raycaster, Vector2 }  from 'three';
 import * as webvrui from 'webvr-ui';
 // import OrbitControls from 'three-orbitcontrols';
 import VRControls from 'three-vrcontrols-module';
@@ -92,31 +93,40 @@ export class mapComponent implements OnInit {
         window.addEventListener('vrdisplaypresentchange', () => {
             this.onResize();
         });
+        window.addEventListener( 'click', (e)=>{
+          this.onSelect(e);
+        });
     }
 
     initScene(texture): void {
-        let skybox = this.createSky(100, texture);
+        let skybox = this.createSky(5, texture);
         this.scene.add(skybox);
-        let vrButtonOptions = {
-            color: 'white',
-            background: false,
-            corners: 'square'
-        };
 
-        this.enterVR = new webvrui.EnterVRButton(this.renderer.domElement, vrButtonOptions);
-        this.ngRenderer.appendChild(this.element.nativeElement, this.enterVR.domElement);
-        this.enterVR.getVRDisplay().then((display) => {
-            this.animationDisplay = display;
-            display.requestAnimationFrame(() => {
-                this.update();
-            });
-        })
-        .catch(() => {
-            this.animationDisplay = window;
-            window.requestAnimationFrame(() => {
-                this.update();
-            });
+        this.animationDisplay = window;
+        window.requestAnimationFrame(() => {
+            this.update();
         });
+
+        // let vrButtonOptions = {
+        //     color: 'black',
+        //     background: false,
+        //     corners: 'square'
+        // };
+
+        // this.enterVR = new webvrui.EnterVRButton(this.renderer.domElement, vrButtonOptions);
+        // this.ngRenderer.appendChild(this.element.nativeElement, this.enterVR.domElement);
+        // this.enterVR.getVRDisplay().then((display) => {
+        //     this.animationDisplay = display;
+        //     display.requestAnimationFrame(() => {
+        //         this.update();
+        //     });
+        // })
+        // .catch(() => {
+        //     this.animationDisplay = window;
+        //     window.requestAnimationFrame(() => {
+        //         this.update();
+        //     });
+        // });
     }
 
     update(): void {
@@ -128,11 +138,11 @@ export class mapComponent implements OnInit {
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         this.effect.render(this.scene, this.camera);
-        if(this.enterVR.isPresenting()){
-
-        } else {
-            this.renderer.render(this.scene, this.camera);
-        }
+        // if(this.enterVR.isPresenting()){
+        //
+        // } else {
+        //     this.renderer.render(this.scene, this.camera);
+        // }
         this.animationDisplay.requestAnimationFrame(() => {
             this.update();
         });
@@ -170,6 +180,18 @@ export class mapComponent implements OnInit {
       var geometry = new THREE.SphereGeometry( .01, .01, .01 );
       var material = new THREE.MeshBasicMaterial( {color} );
       return new THREE.Mesh( geometry, material );
+    }
+
+
+    onSelect(event) {
+    	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects( this.scene.children );
+      for ( var i = 0; i < intersects.length; i++ ) {
+        console.log("intersects", intersects[ i ].distance);
+        intersects[ i ].object.material.color.set( 0xff0000 );
+      }
     }
 
 
