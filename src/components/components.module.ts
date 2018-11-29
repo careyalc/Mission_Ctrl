@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { mapComponent } from './map/map';
-import { MapDetailComponent } from './map-detail/map-detail';
 
 @NgModule({
-	declarations: [mapComponent,
-    MapDetailComponent],
+	declarations: [mapComponent],
 	imports: [],
-	exports: [mapComponent,
-    MapDetailComponent]
+	exports: [mapComponent]
 })
 export class ComponentsModule {}

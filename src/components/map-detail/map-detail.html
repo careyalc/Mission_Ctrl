@@ -1,4 +1,9 @@
-<!-- Generated template for the MapDetailComponent component -->
-<div>
-  {{text}}
-</div>
+<ion-list>
+  <ion-item >
+    <H1> Planet Details </H1>
+    <img src="../../assets/imgs/{{planetDetails.photo}}"/>
+    <H2> {{planetDetails.name}} </H2>
+    <p> Ports: {{planetDetails.ports}} </p>
+    <p> Location: {{planetDetails.x}},{{planetDetails.y}},{{planetDetails.z}}  </p>
+  </ion-item>
+</ion-list>

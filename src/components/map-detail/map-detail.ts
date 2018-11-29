@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ViewController, NavParams } from 'ionic-angular';
+
 
 @Component({
   selector: 'map-detail',
@@ -6,11 +8,23 @@ import { Component } from '@angular/core';
 })
 export class MapDetailComponent {
 
-  text: string;
+  public planetName: any= this.navParams.get('planet_name');
+  public planetDetails: any[];
 
-  constructor() {
-    console.log('Hello MapDetailComponent Component');
-    this.text = 'Hello World';
+  public people: any[] = this.navParams.get('people_data');
+  public planets: any[] = this.navParams.get('planets_data');
+  public ports: any[] = this.navParams.get('ports_data');
+
+  constructor(public viewCtrl: ViewController, public navParams:NavParams) {
+    this.getPlanetDetails()
+  }
+  getPlanetDetails(){
+    for ( var i = 0; i < this.planets.length; i++ ) {
+      if (this.planets[ i ].key==this.planetName){
+        console.log("found planet details", this.planets[ i ]);
+        this.planetDetails = this.planets[ i ];
+      }
+    }
   }
 
 }

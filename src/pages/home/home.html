@@ -24,10 +24,11 @@
         <h1 class= "profile-name" >User Name</h1>
       </ion-row>
       <ion-buttons class="menu-items">
-        <button ion-button clear >Supply Status</button>
-        <button ion-button clear >Location</button>
-        <button ion-button clear >Travelers Nearby</button>
-        <button ion-button clear >Settings</button>
+        <button ion-button clear (click)="goToSupplies()" >Supply Status</button>
+        <button ion-button clear (click)="goToLocation()">Location</button>
+        <button ion-button clear (click)="goToNearby()">Travelers Nearby</button>
+        <button ion-button clear (click)="goToMessages()">Messages</button>
+        <button ion-button clear (click)="goToSettings()">Settings</button>
       </ion-buttons>
     </ion-list>
   </ion-content>

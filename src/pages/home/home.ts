@@ -4,6 +4,11 @@ import { HttpModule, Http } from '@angular/http';
 import { ComponentsModule } from '../../components/components.module'
 import { MenuController } from 'ionic-angular';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { SuppliesPage } from '../supplies/supplies';
+import { LocationPage } from '../location/location';
+import { MessagesPage } from '../messages/messages';
+import { SettingsPage } from '../settings/settings';
+import { NearbyPage } from '../nearby/nearby';
 
 @Component({
   selector: 'page-home',
@@ -18,6 +23,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public menuCtrl: MenuController, private firebaseProvider: FirebaseProvider) {
     this.firebaseProvider.getObservable().subscribe(() => {
+      console.log("home view updating")
       this.people = this.firebaseProvider.getPeople();
       this.ports = this.firebaseProvider.getPorts();
       this.planets = this.firebaseProvider.getPlanets();
@@ -43,5 +49,20 @@ export class HomePage {
     this.hidelist = true;
     this.hidemap = false;
     //add border-bottom style change
+  }
+  goToSupplies() {
+    this.navCtrl.push(SuppliesPage);
+  }
+  goToLocation() {
+    this.navCtrl.push(LocationPage);
+  }
+  goToNearby() {
+    this.navCtrl.push(NearbyPage);
+  }
+  goToMessages() {
+    this.navCtrl.push(MessagesPage);
+  }
+  goToSettings() {
+    this.navCtrl.push(SettingsPage);
   }
 }

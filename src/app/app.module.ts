@@ -4,9 +4,18 @@ import { HttpModule, Http } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { SuppliesPage } from '../pages/supplies/supplies';
+import { LocationPage } from '../pages/location/location';
+import { MessagesPage } from '../pages/messages/messages';
+import { SettingsPage } from '../pages/settings/settings';
+import { NearbyPage } from '../pages/nearby/nearby';
+
 import { ListViewComponent } from '../components/list-view/list-view';
+import { MapDetailComponent } from '../components/map-detail/map-detail';
+
 import { ComponentsModule } from '../components/components.module'
 import { FirebaseProvider } from '../providers/firebase/firebase';
 
@@ -15,7 +24,13 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
   declarations: [
     MyApp,
     HomePage,
-    ListViewComponent
+    SuppliesPage,
+    LocationPage,
+    MessagesPage,
+    SettingsPage,
+    NearbyPage,
+    ListViewComponent,
+    MapDetailComponent
   ],
   imports: [
     HttpModule,
@@ -26,7 +41,13 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    SuppliesPage,
+    LocationPage,
+    MessagesPage,
+    SettingsPage,
+    NearbyPage,
+    [MapDetailComponent]
   ],
   providers: [
     StatusBar,

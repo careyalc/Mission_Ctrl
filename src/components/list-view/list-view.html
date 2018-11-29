@@ -6,6 +6,7 @@
   <H1> Planets </H1>
   <ion-item *ngFor="let planet of planets">
     <p> {{planet.name}} </p>
+    <p> Location: {{planet.x}}, {{planet.y}}, {{planet.z}} </p>
   </ion-item>
   <H1> Ports </H1>
   <ion-item *ngFor="let port of ports">
