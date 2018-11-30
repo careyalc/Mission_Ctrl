@@ -37,7 +37,7 @@ export class FirebaseProvider {
           key: childSnapshot.key,
           name: childSnapshot.val().name,
           active: childSnapshot.val().active,
-          friendly: childSnapshot.val().friendly,
+          demeanor: childSnapshot.val().demeanor,
           money: childSnapshot.val().money,
           supplies: childSnapshot.val().supplies,
           photo: childSnapshot.val().photo
@@ -73,7 +73,7 @@ export class FirebaseProvider {
           name: childSnapshot.val().name,
           ports: childSnapshot.val().ports,
           photo: childSnapshot.val().photo,
-          friendly: childSnapshot.val().friendly,
+          demeanor: childSnapshot.val().demeanor,
           x: childSnapshot.val().x,
           y: childSnapshot.val().y,
           z: childSnapshot.val().z
