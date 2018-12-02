@@ -20,14 +20,24 @@ export class FirebaseProvider {
   private ports: any[];
   private serviceObserver: Observer<any[]>;
   private clientObservable: Observable<any[]>;
-
+  private items: any;
   constructor() {
+    console.log("now we have a provider");
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.database();
 
     this.clientObservable = Observable.create(e => {
         this.serviceObserver = e;
       });
+
+      this.items = [
+       {title: 'one'},
+       {title: 'two'},
+       {title: 'three'},
+       {title: 'four'},
+       {title: 'five'},
+       {title: 'six'}
+   ];
 
     let peopleRef = this.db.ref('/people');
     peopleRef.on('value', snapshot => {
@@ -130,6 +140,13 @@ export class FirebaseProvider {
 // update supply quantity on planet
 // update supply quantity on person
 // update money quantity on person
-
+  public filterItems(searchTerm, searchCat){
+    let entriesClone = searchCat;
+    console.log(entriesClone);
+    return entriesClone.filter((item) => {
+      console.log(item.name.toLowerCase());
+    return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+});
+  }
 
 }

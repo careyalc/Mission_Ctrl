@@ -29,6 +29,7 @@ export class HomePage {
       this.planets = this.firebaseProvider.getPlanets();
     });
   }
+
   // private saveToFirebase() {
   // }
 
