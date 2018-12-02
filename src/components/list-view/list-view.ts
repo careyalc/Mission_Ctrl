@@ -21,16 +21,23 @@ export class ListViewComponent {
 
 
   constructor(private firebaseProvider: FirebaseProvider) {
+
+  //  this.searchCat = this.planets;
+
+  }
+
+  ngOnInit() {
     this.firebaseProvider.getObservable().subscribe(()=> {
       console.log("please list view updating")
       this.people = this.firebaseProvider.getPeople();
       this.ports = this.firebaseProvider.getPorts();
       this.planets = this.firebaseProvider.getPlanets();
+      this.searchCat = this.planets;
     });
     this.listPorts = false;
     this.listPeople = false;
     this.listPlanets = true;
-  //  this.searchCat = this.planets;
+
 
   }
 
@@ -60,7 +67,12 @@ export class ListViewComponent {
     }
   setFilteredItems(): void {
     //console.log("testing");
-    this.searchCat = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
+    if(this.listPlanets){
+      this.planets = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
+    }
+    if(this.listPeople){
+      this.people = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
+    }
     //console.log(this.planets);
   }
 }

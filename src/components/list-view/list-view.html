@@ -7,13 +7,13 @@
   </ion-item>
   <ng-container *ngIf="listPeople">
   <H1> People </H1>
-  <ion-item *ngFor="let person of searchCat">
+  <ion-item *ngFor="let person of people">
     <p> {{person.name}} </p>
   </ion-item>
   </ng-container>
   <ng-container *ngIf="listPlanets">
   <H1> Planets </H1>
-  <ion-item *ngFor="let planet of searchCat">
+  <ion-item *ngFor="let planet of planets">
     <p> {{planet.name}} </p>
     <p> Location: {{planet.x}}, {{planet.y}}, {{planet.z}} </p>
   </ion-item>
