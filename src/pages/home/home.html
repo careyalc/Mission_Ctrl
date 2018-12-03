@@ -36,7 +36,7 @@
 <ion-nav #mycontent [root]="rootPage"></ion-nav>
 
 <ion-content padding>
-  <list-view [hidden]='hidelist'></list-view>
-  <app-map [hidden]='hidemap'></app-map>
+  <list-view [hidden]='hidelist' [people]="people" [ports]="ports" [planets]="planets" ></list-view>
+  <app-map [hidden]='hidemap' [people]="people" [ports]="ports" [planets]="planets"></app-map>
 
 </ion-content>

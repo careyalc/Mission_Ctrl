@@ -15,6 +15,7 @@ import { NearbyPage } from '../pages/nearby/nearby';
 
 import { ListViewComponent } from '../components/list-view/list-view';
 import { MapDetailComponent } from '../components/map-detail/map-detail';
+import { mapComponent } from '../components/map/map';
 
 import { ComponentsModule } from '../components/components.module'
 import { FirebaseProvider } from '../providers/firebase/firebase';
@@ -30,7 +31,8 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
     SettingsPage,
     NearbyPage,
     ListViewComponent,
-    MapDetailComponent
+    MapDetailComponent,
+    mapComponent
   ],
   imports: [
     HttpModule,
@@ -47,7 +49,9 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
     MessagesPage,
     SettingsPage,
     NearbyPage,
-    [MapDetailComponent]
+    MapDetailComponent,
+    ListViewComponent,
+    mapComponent
   ],
   providers: [
     StatusBar,
