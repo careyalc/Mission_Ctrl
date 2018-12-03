@@ -27,22 +27,12 @@ export class ListViewComponent {
   constructor(private firebaseProvider: FirebaseProvider) {
 
    this.searchCat = this.planets;
+   this.listPorts = false;
+   this.listPeople = false;
+   this.listPlanets = true;
 
   }
 
-//   ngOnInit() {
-//     this.firebaseProvider.getObservable().subscribe(()=> {
-//       console.log("please list view updating")
-//       this.people = this.firebaseProvider.getPeople();
-//       this.ports = this.firebaseProvider.getPorts();
-//       this.planets = this.firebaseProvider.getPlanets();
-//       this.searchCat = this.planets;
-//     });
-    this.listPorts = false;
-    this.listPeople = false;
-    this.listPlanets = true;
-
-  }
 
   showPlanets() {
     this.listPorts = false;

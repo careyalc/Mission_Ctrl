@@ -178,11 +178,10 @@ export class mapComponent implements OnInit {
     	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.scene.children );
-
       for ( var i = 0; i < intersects.length; i++ ) {
-        if (intersects[ i ].object.name){
-          console.log("intersects", intersects[ i ].object.name);
-          this.presentPopover(this.mouse, intersects[ i ].object);
+        if (intersects[i].object.name){
+          console.log("intersects", intersects[i].object.name);
+          this.presentPopover(this.mouse, intersects[i].object);
         }
       }
     }
