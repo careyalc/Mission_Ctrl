@@ -2,6 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule, Http } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
+import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
@@ -56,6 +60,9 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
   providers: [
     StatusBar,
     SplashScreen,
+    DeviceMotion,
+    DeviceOrientation,
+    Gyroscope,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseProvider
   ]

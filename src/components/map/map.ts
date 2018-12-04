@@ -1,5 +1,8 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
-import { ViewController, PopoverController } from 'ionic-angular';
+import { PopoverController } from 'ionic-angular';
+import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
+import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 
 import { HttpModule, Http } from '@angular/http';
 import { MapDetailComponent } from '../map-detail/map-detail';
@@ -9,6 +12,8 @@ import * as webvrui from 'webvr-ui';
 // import OrbitControls from 'three-orbitcontrols';
 import VRControls from 'three-vrcontrols-module';
 import VREffect from 'three-vreffect-module';
+// import * as orient from 'three.orientation';
+import CardboardVRDisplay from 'cardboard-vr-display';
 
 @Component({
   selector: 'app-map',
@@ -18,9 +23,7 @@ import VREffect from 'three-vreffect-module';
 export class mapComponent implements OnInit {
 
     @ViewChild('mapCanvas') mapCanvas;
-    @Input() people;
-    @Input() ports;
-    @Input() planets;
+
 
     private width: number = window.innerWidth;
     private height: number = window.innerHeight;
@@ -31,6 +34,7 @@ export class mapComponent implements OnInit {
 
     private controls: VRControls = new VRControls(this.camera);
     // private controls: OrbitControls = new OrbitControls(this.camera);
+    // private orientationControl: orient = new orient(this.camera);
 
     private effect: VREffect;
     private enterVR;
@@ -39,105 +43,198 @@ export class mapComponent implements OnInit {
     private raycaster = new THREE.Raycaster();
     private mouse = new THREE.Vector2();
 
-    private planet1: THREE.Mesh;
-    private planet2: THREE.Mesh;
-    private planet3: THREE.Mesh;
+    @Input() people;
+    @Input() ports;
+    @Input() planets;
+
+    private lastRender = 0;
+    private timestamp: any = new Date();
+    private config;
+    private vrDisplay;
     private spaceport: THREE.Mesh;
     private traveller: THREE.Mesh;
+    private loader: THREE.TextureLoader = new THREE.TextureLoader();
 
-    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController) {
+    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController, private deviceMotion: DeviceMotion, private deviceOrientation: DeviceOrientation, private gyroscope: Gyroscope) {
+      // console.log(Math.min(this.timestamp - this.lastRender,500))
+      // this.deviceMotion.getCurrentAcceleration().then(
+      //   (acceleration: DeviceMotionAccelerationData) => console.log("acceleration",acceleration),
+      //   (error: any) => console.log(error)
+      // );
+      //
+      // // Watch device acceleration
+      // var subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
+      //   console.log(acceleration);
+      // });
+      //
+      // // Stop watch
+      // // subscription.unsubscribe();
+      // this.deviceOrientation.getCurrentHeading().then(
+      //   (data: DeviceOrientationCompassHeading) => console.log(data),
+      //   (error: any) => console.log(error)
+      // );
+      //
+      // // Watch the device compass heading change
+      // var subscription = this.deviceOrientation.watchHeading().subscribe(
+      //   (data: DeviceOrientationCompassHeading) => console.log(data)
+      // );
+
+      // Stop watching heading change
+      // subscription.unsubscribe();
+      console.log(this.gyroscope);
+      let options: GyroscopeOptions = {
+         frequency: 1000
+      };
+      this.gyroscope.getCurrent(options)
+        .then((orientation: GyroscopeOrientation) => {
+           console.log("orientation",orientation.x, orientation.y, orientation.z, orientation.timestamp);
+         })
+        .catch()
+
+
+      this.gyroscope.watch()
+         .subscribe((orientation: GyroscopeOrientation) => {
+            console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
+         });
     }
+
 
     ngOnInit() {
-        this.renderer = new THREE.WebGLRenderer({antialias: false, canvas: this.mapCanvas.nativeElement});
-        this.effect = new VREffect(this.renderer);
-        let loader: THREE.TextureLoader = new THREE.TextureLoader();
+      this.config = (function() {
+        let config2 = {};
+        let q = window.location.search.substring(1);
+        if (q === '') {
+          return config2;
+        }
+      let params = q.split('&');
+      let param, name, value;
+      for (var i = 0; i < params.length; i++) {
+        param = params[i].split('=');
+        name = param[0];
+        value = param[1];
+        // All config values are either boolean or float
+        config2[name] = value === 'true' ? true :
+                       value === 'false' ? false :
+                       parseFloat(value);
+      }
+      return config2;
+    })();
+    console.log('creating CardboardVRDisplay with options', this.config);
+    this.vrDisplay = new CardboardVRDisplay(this.config);
+    // navigator.getVRDisplays = function () {
+    //   return new Promise(function (resolve) {
+    //     resolve([this.vrDisplay]);
+    //   });
+    //};
+    // this.vrDisplay.requestAnimationFrame(this.animate);
 
-        this.renderer.vr.enabled = true;
-        this.renderer.setSize(this.width, this.height);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
 
-        // create planets - pull in all planets from database
-        // console.log()
-        loader.load('../../assets/textures/planet_1.jpg', (texture) => {
-            this.planet1 = this.createPlanet(0.15, texture);
-            this.planet1.position.set(-.3, 1.2, -1);
-            this.planet1.name = "planet1"
-            this.scene.add(this.planet1);
-        });
-        loader.load('../../assets/textures/planet_2.jpg', (texture) => {
-            this.planet2 = this.createPlanet(0.08, texture);
-            this.planet2.position.set(0, 3, -3);
-            this.planet2.name = "planet2"
-            this.scene.add(this.planet2);
-        });
-        loader.load('../../assets/textures/planet_3.jpg', (texture) => {
-            this.planet3 = this.createPlanet(0.05, texture);
-            this.planet3.position.set(0, 1, -1);
-            this.planet3.name = "planet3"
-            this.scene.add(this.planet3);
-        });
+    this.renderer = new THREE.WebGLRenderer({antialias: false, canvas: this.mapCanvas.nativeElement});
+    this.effect = new VREffect(this.renderer);
+    this.renderer.vr.enabled = true;
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    setTimeout(()=>{
+      this.populatePlanets()
+    }, 1500);
+    // create spaceports
+    // loader.load('../../assets/textures/grass.jpg', (texture) => {
+    //     this.spaceport = this.createSpaceport(texture);
+    //     this.spaceport.position.set(.075,.075,.075);
+    //     this.planet1.add(this.spaceport);
+    // });
+    //
+    // // create travellers
+    // this.traveller = this.createTraveller('rgb(0,0,0)');
+    // this.traveller.position.set(2, this.controls.userHeight, -1);
+    // this.scene.add(this.traveller);
 
-        // create spaceports
-        loader.load('../../assets/textures/grass.jpg', (texture) => {
-            this.spaceport = this.createSpaceport(texture);
-            this.spaceport.position.set(.075,.075,.075);
-            this.planet1.add(this.spaceport);
-        });
+    this.controls.standing = true;
+    this.camera.position.y = this.controls.userHeight;
 
-        // create travellers
-        this.traveller = this.createTraveller('rgb(0,0,0)');
-        this.traveller.position.set(2, this.controls.userHeight, -1);
-        this.scene.add(this.traveller);
+    this.effect.setSize(this.width, this.height);
 
-        this.controls.standing = true;
-        this.camera.position.y = this.controls.userHeight;
+    this.loader.load('../../assets/textures/sky.jpg', (texture) => {
+        this.initScene(texture);
+    });
+    window.addEventListener('resize', () => {
+        this.onResize();
+    });
+    window.addEventListener('vrdisplaypresentchange', () => {
+        this.onResize();
+    });
+    window.addEventListener( 'click', (e)=>{
+      this.onSelect(e);
+    });
+    window.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    });
+  }
 
-        this.effect.setSize(this.width, this.height);
 
-        loader.load('../../assets/textures/sky.jpg', (texture) => {
-            this.initScene(texture);
-        });
-        window.addEventListener('resize', () => {
-            this.onResize();
-        });
-        window.addEventListener('vrdisplaypresentchange', () => {
-            this.onResize();
-        });
-        window.addEventListener( 'click', (e)=>{
-          this.onSelect(e);
-        });
-    }
+  initScene(texture): void {
+      let skybox = this.createSky(15, texture);
+      this.scene.add(skybox);
 
-    initScene(texture): void {
-        let skybox = this.createSky(15, texture);
-        this.scene.add(skybox);
+      // this.animationDisplay = window;
+      // window.requestAnimationFrame(() => {
+      //     this.update();
+      // });
+      this.vrDisplay.requestAnimationFrame(() => {
+          this.update();
+      });
+  }
 
-        this.animationDisplay = window;
-        window.requestAnimationFrame(() => {
-            this.update();
-        });
-    }
-
-    update(): void {
-      //planet movements
-        this.planet1.rotateY(0.01);
-        this.planet2.rotateY(0.01);
-        this.planet3.rotateY(0.01);
-
-        this.controls.update();
-        this.renderer.render(this.scene, this.camera);
-        this.effect.render(this.scene, this.camera);
-        this.animationDisplay.requestAnimationFrame(() => {
-            this.update();
-        });
-    }
+  update(): void {
+    console.log(this.gyroscope);
+      this.controls.update();
+      this.renderer.render(this.scene, this.camera);
+      this.effect.render(this.scene, this.camera);
+      this.vrDisplay.requestAnimationFrame(() => {
+          this.update();
+      });
+      // this.animationDisplay.requestAnimationFrame(() => {
+      //     this.update();
+      // });
+  }
 
     onResize(): void {
         this.effect.setSize(this.width, this.height);
         this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
     }
+
+    populatePlanets(){
+      if (this.planets){
+        for ( var i = 0; i < this.planets.length; i++ ) {
+          console.log("location", this.planets[i])
+            let x = this.planets[i].location[0];
+            let y = this.planets[i].location[1];
+            let z = this.planets[i].location[2];
+            let planetName = this.planets[i].name
+            this.loader.load('../../assets/textures/'+this.planets[i].name+'.jpg', (texture) => {
+              console.log("loading")
+              let planet = this.createPlanet(0.25, texture);
+              planet.position.set(x,y,z);
+              planet.name = planetName;
+              this.scene.add(planet);
+            });
+          }
+
+      } else {
+        console.log("planets haven't loaded yet")
+      }
+    }
+    // rotatePlanets(){
+    //   if (this.planets){
+    //       for ( var i = 0; i < this.planets.length; i++ ) {
+    //           console.log("rotating",this.planets[i])
+    //           this.planets[i].name.rotateY(0.01);
+    //         }
+    //   } else {
+    //     console.log("planets haven't loaded yet")
+    //   }
+    // }
 
     createSky(size, texture): THREE.Mesh {
         texture.wrapT = THREE.RepeatWrapping;
