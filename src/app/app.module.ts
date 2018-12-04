@@ -15,9 +15,11 @@ import { NearbyPage } from '../pages/nearby/nearby';
 
 import { ListViewComponent } from '../components/list-view/list-view';
 import { MapDetailComponent } from '../components/map-detail/map-detail';
+import { ListDetailComponent } from '../components/list-detail/list-detail';
 
 import { ComponentsModule } from '../components/components.module'
 import { FirebaseProvider } from '../providers/firebase/firebase';
+import { Camera } from '@ionic-native/camera';
 
 
 @NgModule({
@@ -47,9 +49,10 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
     MessagesPage,
     SettingsPage,
     NearbyPage,
-    [MapDetailComponent]
+    [MapDetailComponent, ListDetailComponent]
   ],
   providers: [
+    Camera,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
