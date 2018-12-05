@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
-import { PopoverController } from 'ionic-angular';
-import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
+import { ViewController, PopoverController } from 'ionic-angular';
 
 import { HttpModule, Http } from '@angular/http';
 import { MapDetailComponent } from '../map-detail/map-detail';
@@ -19,6 +18,9 @@ import VREffect from 'three-vreffect-module';
 export class mapComponent implements OnInit {
 
     @ViewChild('mapCanvas') mapCanvas;
+    @Input() people;
+    @Input() ports;
+    @Input() planets;
 
     private width: number = window.innerWidth;
     private height: number = window.innerHeight;
@@ -37,24 +39,13 @@ export class mapComponent implements OnInit {
     private raycaster = new THREE.Raycaster();
     private mouse = new THREE.Vector2();
 
-    public people: any[];
-    public planets: any[];
-    public ports: any[];
-
     private planet1: THREE.Mesh;
     private planet2: THREE.Mesh;
     private planet3: THREE.Mesh;
     private spaceport: THREE.Mesh;
     private traveller: THREE.Mesh;
 
-    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController, private firebaseProvider: FirebaseProvider) {
-      this.firebaseProvider.getObservable().subscribe(() => {
-        console.log("map view updating")
-        this.people = this.firebaseProvider.getPeople();
-        this.ports = this.firebaseProvider.getPorts();
-        this.planets = this.firebaseProvider.getPlanets();
-
-      });
+    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController) {
     }
 
     ngOnInit() {
@@ -67,6 +58,7 @@ export class mapComponent implements OnInit {
         this.renderer.setPixelRatio(window.devicePixelRatio);
 
         // create planets - pull in all planets from database
+        // console.log()
         loader.load('../../assets/textures/planet_1.jpg', (texture) => {
             this.planet1 = this.createPlanet(0.15, texture);
             this.planet1.position.set(-.3, 1.2, -1);
@@ -118,7 +110,7 @@ export class mapComponent implements OnInit {
     }
 
     initScene(texture): void {
-        let skybox = this.createSky(5, texture);
+        let skybox = this.createSky(15, texture);
         this.scene.add(skybox);
 
         this.animationDisplay = window;
@@ -186,11 +178,10 @@ export class mapComponent implements OnInit {
     	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.scene.children );
-
       for ( var i = 0; i < intersects.length; i++ ) {
-        if (intersects[ i ].object.name){
-          console.log("intersects", intersects[ i ].object.name);
-          this.presentPopover(this.mouse, intersects[ i ].object);
+        if (intersects[i].object.name){
+          console.log("intersects", intersects[i].object.name);
+          this.presentPopover(this.mouse, intersects[i].object);
         }
       }
     }

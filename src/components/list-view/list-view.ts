@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  Input } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { ViewController, NavParams } from 'ionic-angular';
 import { NavController } from 'ionic-angular';
 import { ListDetailComponent } from '../list-detail/list-detail';
+import { HomePage } from '../../pages/home/home';
 
 @Component({
   selector: 'list-view',
   templateUrl: 'list-view.html'
 })
 export class ListViewComponent {
+  @Input() people;
+  @Input() ports;
+  @Input() planets;
 
   private searchTerm: string = '';
   private searchCat: any;
   private items: any;
 
-  public people: any[];
-  public planets: any[];
-  public ports: any[];
+//   public people: any[];
+//   public planets: any[];
+//   public ports: any[];
   private listPorts: boolean;
   private listPeople: boolean;
   private listPlanets: boolean;
@@ -24,24 +28,13 @@ export class ListViewComponent {
 
   constructor(private firebaseProvider: FirebaseProvider, public navCtrl: NavController) {
 
-  //  this.searchCat = this.planets;
+   this.searchCat = this.planets;
+   this.listPorts = false;
+   this.listPeople = false;
+   this.listPlanets = true;
 
   }
 
-  ngOnInit() {
-    this.firebaseProvider.getObservable().subscribe(()=> {
-      console.log("please list view updating")
-      this.people = this.firebaseProvider.getPeople();
-      this.ports = this.firebaseProvider.getPorts();
-      this.planets = this.firebaseProvider.getPlanets();
-      this.searchCat = this.planets;
-    });
-    this.listPorts = false;
-    this.listPeople = false;
-    this.listPlanets = true;
-
-
-  }
 
   showPlanets() {
     this.listPorts = false;

@@ -54,7 +54,7 @@ export class FirebaseProvider {
         };
         this.people.push(person);
       });
-      console.log("people from service", this.people)
+      // console.log("people from service", this.people)
       this.notifySubscribers();
     });
     let portRef = this.db.ref('/ports');
@@ -71,7 +71,7 @@ export class FirebaseProvider {
         };
         this.ports.push(port);
       });
-      console.log("ports from service", this.ports)
+      // console.log("ports from service", this.ports)
       this.notifySubscribers();
     });
     let planetRef = this.db.ref('/planets');
@@ -90,7 +90,7 @@ export class FirebaseProvider {
         };
         this.planets.push(planet);
       });
-      console.log("planets from service", this.planets)
+      // console.log("planets from service", this.planets)
       this.notifySubscribers();
     });
   }
@@ -105,19 +105,19 @@ export class FirebaseProvider {
   public getPlanets():any[] {
     let entriesClone = this.planets;
     // let entriesClone = JSON.parse(JSON.stringify(this.planets));
-    console.log("Someone got my planets! They got: ", entriesClone);
+    // console.log("Someone got my planets! They got: ", entriesClone);
     return entriesClone;
   }
   public getPeople():any[] {
     let entriesClone = this.people;
     // let entriesClone = JSON.parse(JSON.stringify(this.people));
-    console.log("Someone got my people! They got: ", entriesClone);
+    // console.log("Someone got my people! They got: ", entriesClone);
     return entriesClone;
   }
   public getPorts():any[] {
     let entriesClone = this.ports;
     // let entriesClone = JSON.parse(JSON.stringify(this.ports));
-    console.log("Someone got my ports! They got: ", entriesClone);
+    // console.log("Someone got my ports! They got: ", entriesClone);
     return entriesClone;
   }
   private findSupplyByName(name: string): any {

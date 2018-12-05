@@ -16,6 +16,7 @@ import { NearbyPage } from '../pages/nearby/nearby';
 import { ListViewComponent } from '../components/list-view/list-view';
 import { MapDetailComponent } from '../components/map-detail/map-detail';
 import { ListDetailComponent } from '../components/list-detail/list-detail';
+import { mapComponent } from '../components/map/map';
 
 import { ComponentsModule } from '../components/components.module'
 import { FirebaseProvider } from '../providers/firebase/firebase';
@@ -33,7 +34,8 @@ import { Camera } from '@ionic-native/camera';
     NearbyPage,
     ListViewComponent,
     MapDetailComponent,
-    ListDetailComponent
+    ListDetailComponent,
+    mapComponent
   ],
   imports: [
     HttpModule,
@@ -51,6 +53,8 @@ import { Camera } from '@ionic-native/camera';
     SettingsPage,
     NearbyPage,
     [MapDetailComponent, ListDetailComponent]
+    ListViewComponent,
+    mapComponent
   ],
   providers: [
     Camera,
