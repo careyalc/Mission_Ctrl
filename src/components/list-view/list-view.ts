@@ -1,6 +1,8 @@
 import { Component, OnInit,  Input } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
-import { ViewController} from 'ionic-angular';
+import { ViewController, NavParams } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
+import { ListDetailComponent } from '../list-detail/list-detail';
 import { HomePage } from '../../pages/home/home';
 
 @Component({
@@ -24,7 +26,7 @@ export class ListViewComponent {
   private listPlanets: boolean;
 
 
-  constructor(private firebaseProvider: FirebaseProvider) {
+  constructor(private firebaseProvider: FirebaseProvider, public navCtrl: NavController) {
 
    this.searchCat = this.planets;
    this.listPorts = false;
@@ -67,5 +69,10 @@ export class ListViewComponent {
       this.people = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
     }
     //console.log(this.planets);
+  }
+
+  private goToDetail() {
+    console.log("going to detail page");
+    this.navCtrl.push(ListDetailComponent);
   }
 }

@@ -7,20 +7,20 @@
   </ion-item>
   <ng-container *ngIf="listPeople">
   <H1> People </H1>
-  <ion-item *ngFor="let person of people">
+  <ion-item *ngFor="let person of people" (click)="goToDetail()">
     <p> {{person.name}} </p>
   </ion-item>
   </ng-container>
   <ng-container *ngIf="listPlanets">
   <H1> Planets </H1>
-  <ion-item *ngFor="let planet of planets">
+  <ion-item *ngFor="let planet of planets" (click)="goToDetail()">
     <p> {{planet.name}} </p>
     <p> Location: {{planet.x}}, {{planet.y}}, {{planet.z}} </p>
   </ion-item>
 </ng-container>
 <ng-container *ngIf="listPorts">
   <H1> Ports </H1>
-  <ion-item *ngFor="let port of searchCat">
+  <ion-item *ngFor="let port of searchCat" (click)="goToDetail()">
     <p> {{port.key}}</p>
     <p> Supplies: {{port.type}}</p>
     <p> Planet: {{port.planet}}</p>
