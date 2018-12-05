@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { HomePage } from '../../pages/home/home';
+import { FirebaseProvider } from '../../providers/firebase/firebase';
+// import { ListViewComponent } from '../components/list-view/list-view';
 
 const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
 const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
@@ -22,7 +24,7 @@ export class ListDetailComponent {
   private image = PLACEHOLDER_IMAGE;
 
   constructor(
-    public navCtrl: NavController, private camera: Camera
+    public navCtrl: NavController, private camera: Camera, private firebaseProvider: FirebaseProvider
     ) {
     console.log('Hello ListDetailComponent Component');
     this.text = 'Hello World';

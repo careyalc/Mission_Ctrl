@@ -1,7 +1,17 @@
-
-<h1> Profile Page! </h1>
-
-<button ion-button full (click)="takePic()">Add Photo</button>
-<img [src]="image">
-
-<!-- <button ion-button full (click)="goToListView()">Back</button> -->
+<ion-header>
+  <ion-navbar>
+    <ion-title class="headerItem">Name</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <!-- <img [src]="{{planet.image}}"/>  -->
+  <!--  ^how would image/bame work if it could be a planet, port, or person?-->
+  <h2>Name Again</h2>
+  <p>Details details details</p>
+<ion-item>
+  <button ion-button clear icon-only item-end
+  (click)="takePic()">
+  <ion-icon name="camera"></ion-icon>
+  </button>
+</ion-item>
+</ion-content>

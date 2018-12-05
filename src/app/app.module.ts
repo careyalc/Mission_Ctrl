@@ -32,7 +32,8 @@ import { Camera } from '@ionic-native/camera';
     SettingsPage,
     NearbyPage,
     ListViewComponent,
-    MapDetailComponent
+    MapDetailComponent,
+    ListDetailComponent
   ],
   imports: [
     HttpModule,

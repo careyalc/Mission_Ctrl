@@ -3,10 +3,8 @@ import { mapComponent } from './map/map';
 import { ListDetailComponent } from './list-detail/list-detail';
 
 @NgModule({
-	declarations: [mapComponent,
-    ListDetailComponent],
+	declarations: [mapComponent],
 	imports: [],
-	exports: [mapComponent,
-    ListDetailComponent]
+	exports: [mapComponent]
 })
 export class ComponentsModule {}
