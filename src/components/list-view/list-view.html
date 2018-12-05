@@ -15,7 +15,7 @@
   <H1> Planets </H1>
   <ion-item *ngFor="let planet of planets" (click)="goToDetail()">
     <p> {{planet.name}} </p>
-    <p> Location: {{planet.x}}, {{planet.y}}, {{planet.z}} </p>
+    <p> Location: {{planet.location[0]}}, {{planet.location[1]}}, {{planet.location[2]}}</p>
   </ion-item>
 </ng-container>
 <ng-container *ngIf="listPorts">

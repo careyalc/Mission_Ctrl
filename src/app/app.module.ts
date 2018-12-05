@@ -52,7 +52,7 @@ import { Camera } from '@ionic-native/camera';
     MessagesPage,
     SettingsPage,
     NearbyPage,
-    [MapDetailComponent, ListDetailComponent]
+    [MapDetailComponent, ListDetailComponent],
     ListViewComponent,
     mapComponent
   ],

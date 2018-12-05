@@ -27,7 +27,7 @@ export class ListViewComponent {
 
 
   constructor(private firebaseProvider: FirebaseProvider, public navCtrl: NavController) {
-
+    console.log(this.planets)
    this.searchCat = this.planets;
    this.listPorts = false;
    this.listPeople = false;
