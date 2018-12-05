@@ -82,7 +82,7 @@ export class FirebaseProvider {
           key: childSnapshot.key,
           name: childSnapshot.val().name,
           ports: childSnapshot.val().ports,
-          photo: childSnapshot.val().photo,
+          // photo: childSnapshot.val().photo,
           demeanor: childSnapshot.val().demeanor,
           location: childSnapshot.val().location,
 

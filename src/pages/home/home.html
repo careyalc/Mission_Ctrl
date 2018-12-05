@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons class="headerItems">
-      <button slot="start" ion-button (click)="openMenu()" clear>
+      <button slot="start" ion-button (click)="openMenu()" clear  >
         <ion-icon name="menu"></ion-icon>
       </button>
       <button class="headerItem" ion-button clear (click)="goToMapView()">Map</button>
@@ -13,8 +13,8 @@
   </ion-navbar>
 </ion-header>
 
-<ion-menu persistent="true" type="overlay" [content]="mycontent">
-  <ion-content class = "menu-content">
+<ion-menu persistent="true" type="overlay" [content]="mycontent" >
+  <ion-content class = "menu-content" >
     <button slot="end" ion-button (click)="closeMenu()" clear>
       <ion-icon name="close"></ion-icon>
     </button>
@@ -33,7 +33,7 @@
     </ion-list>
   </ion-content>
 </ion-menu>
-<ion-nav #mycontent [root]="rootPage"></ion-nav>
+<ion-nav #mycontent [root]="rootPage" ></ion-nav>
 
 <ion-content padding>
   <list-view [hidden]='hidelist' [people]="people" [ports]="ports" [planets]="planets" ></list-view>

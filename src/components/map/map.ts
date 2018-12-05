@@ -1,19 +1,13 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { PopoverController } from 'ionic-angular';
-import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
-import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
-import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
-
-import { HttpModule, Http } from '@angular/http';
+// import { HttpModule, Http } from '@angular/http';
 import { MapDetailComponent } from '../map-detail/map-detail';
 import * as THREE from 'three';
 import { Raycaster, Vector2 }  from 'three';
-import * as webvrui from 'webvr-ui';
-// import OrbitControls from 'three-orbitcontrols';
-import VRControls from 'three-vrcontrols-module';
+
+import OrbitControls from 'three-orbitcontrols';
+// import VRControls from 'three-vrcontrols-module';
 import VREffect from 'three-vreffect-module';
-// import * as orient from 'three.orientation';
-import CardboardVRDisplay from 'cardboard-vr-display';
 
 @Component({
   selector: 'app-map',
@@ -22,121 +16,45 @@ import CardboardVRDisplay from 'cardboard-vr-display';
 })
 export class mapComponent implements OnInit {
 
-    @ViewChild('mapCanvas') mapCanvas;
+  @ViewChild('mapCanvas') mapCanvas;
 
+  private width: number = window.innerWidth;
+  private height: number = window.innerHeight;
 
-    private width: number = window.innerWidth;
-    private height: number = window.innerHeight;
+  private scene: THREE.Scene = new THREE.Scene();
+  private camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
+  private renderer: THREE.WebGLRenderer;
 
-    private scene: THREE.Scene = new THREE.Scene();
-    private camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
-    private renderer: THREE.WebGLRenderer;
+  // private controls: VRControls = new VRControls(this.camera);
+  private controls: OrbitControls = new OrbitControls(this.camera);
 
-    private controls: VRControls = new VRControls(this.camera);
-    // private controls: OrbitControls = new OrbitControls(this.camera);
-    // private orientationControl: orient = new orient(this.camera);
+  private effect: VREffect;
+  private animationDisplay;
 
-    private effect: VREffect;
-    private enterVR;
-    private animationDisplay;
+  private raycaster = new THREE.Raycaster();
+  private mouse = new THREE.Vector2();
 
-    private raycaster = new THREE.Raycaster();
-    private mouse = new THREE.Vector2();
+  @Input() people;
+  @Input() ports;
+  @Input() planets;
 
-    @Input() people;
-    @Input() ports;
-    @Input() planets;
+  private loader: THREE.TextureLoader = new THREE.TextureLoader();
 
-    private lastRender = 0;
-    private timestamp: any = new Date();
-    private config;
-    private vrDisplay;
-    private spaceport: THREE.Mesh;
-    private traveller: THREE.Mesh;
-    private loader: THREE.TextureLoader = new THREE.TextureLoader();
+  constructor(public popoverCtrl: PopoverController) {
+  }
 
-    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController, private deviceMotion: DeviceMotion, private deviceOrientation: DeviceOrientation, private gyroscope: Gyroscope) {
-      // console.log(Math.min(this.timestamp - this.lastRender,500))
-      // this.deviceMotion.getCurrentAcceleration().then(
-      //   (acceleration: DeviceMotionAccelerationData) => console.log("acceleration",acceleration),
-      //   (error: any) => console.log(error)
-      // );
-      //
-      // // Watch device acceleration
-      // var subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-      //   console.log(acceleration);
-      // });
-      //
-      // // Stop watch
-      // // subscription.unsubscribe();
-      // this.deviceOrientation.getCurrentHeading().then(
-      //   (data: DeviceOrientationCompassHeading) => console.log(data),
-      //   (error: any) => console.log(error)
-      // );
-      //
-      // // Watch the device compass heading change
-      // var subscription = this.deviceOrientation.watchHeading().subscribe(
-      //   (data: DeviceOrientationCompassHeading) => console.log(data)
-      // );
-
-      // Stop watching heading change
-      // subscription.unsubscribe();
-      console.log(this.gyroscope);
-      let options: GyroscopeOptions = {
-         frequency: 1000
-      };
-      this.gyroscope.getCurrent(options)
-        .then((orientation: GyroscopeOrientation) => {
-           console.log("orientation",orientation.x, orientation.y, orientation.z, orientation.timestamp);
-         })
-        .catch()
-
-
-      this.gyroscope.watch()
-         .subscribe((orientation: GyroscopeOrientation) => {
-            console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-         });
-    }
-
-
-    ngOnInit() {
-      this.config = (function() {
-        let config2 = {};
-        let q = window.location.search.substring(1);
-        if (q === '') {
-          return config2;
-        }
-      let params = q.split('&');
-      let param, name, value;
-      for (var i = 0; i < params.length; i++) {
-        param = params[i].split('=');
-        name = param[0];
-        value = param[1];
-        // All config values are either boolean or float
-        config2[name] = value === 'true' ? true :
-                       value === 'false' ? false :
-                       parseFloat(value);
-      }
-      return config2;
-    })();
-    console.log('creating CardboardVRDisplay with options', this.config);
-    this.vrDisplay = new CardboardVRDisplay(this.config);
-    // navigator.getVRDisplays = function () {
-    //   return new Promise(function (resolve) {
-    //     resolve([this.vrDisplay]);
-    //   });
-    //};
-    // this.vrDisplay.requestAnimationFrame(this.animate);
-
-
-    this.renderer = new THREE.WebGLRenderer({antialias: false, canvas: this.mapCanvas.nativeElement});
+  ngOnInit() {
+    this.renderer = new THREE.WebGLRenderer({antialias:true, canvas: this.mapCanvas.nativeElement});
     this.effect = new VREffect(this.renderer);
     this.renderer.vr.enabled = true;
     this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+
     setTimeout(()=>{
-      this.populatePlanets()
-    }, 1500);
+      this.populatePlanets();
+      this.populatePeople();
+    }, 2000);
+
     // create spaceports
     // loader.load('../../assets/textures/grass.jpg', (texture) => {
     //     this.spaceport = this.createSpaceport(texture);
@@ -151,51 +69,58 @@ export class mapComponent implements OnInit {
 
     this.controls.standing = true;
     this.camera.position.y = this.controls.userHeight;
-
+    this.controls.target=new THREE.Vector3(-2.090743905901129 -0.5779857632670825 -2.3795666436257363);
     this.effect.setSize(this.width, this.height);
+
 
     this.loader.load('../../assets/textures/sky.jpg', (texture) => {
         this.initScene(texture);
+        console.log("sky loaded")
     });
     window.addEventListener('resize', () => {
         this.onResize();
+        console.log("screen is being resized")
     });
     window.addEventListener('vrdisplaypresentchange', () => {
         this.onResize();
+        console.log("detected VR display")
     });
     window.addEventListener( 'click', (e)=>{
+      console.log("testing click for iphone (click), Alex is it working?", e)
       this.onSelect(e);
     });
-    window.addEventListener('touchmove', function(e) {
-      e.preventDefault();
+    window.addEventListener( 'mouseclick', (e)=>{
+      console.log("testing click for iphone (mouseclick), Alex is it working?", e)
+      this.onSelect(e);
     });
+    window.addEventListener( 'touchstart', (e)=>{
+      console.log("testing click for iphone (touchstart), Alex is it working?", e)
+      this.onSelect(e);
+    });
+
+    // window.addEventListener('touchend', (e)=>{
+    //   console.log("camera location",this.camera.rotation.x, this.camera.rotation.y, this.camera.rotation.z)
+    // });
   }
 
-
   initScene(texture): void {
-      let skybox = this.createSky(15, texture);
+      let skybox = this.createSky(20, texture);
+      skybox.name = "sky"
       this.scene.add(skybox);
-
-      // this.animationDisplay = window;
-      // window.requestAnimationFrame(() => {
-      //     this.update();
-      // });
-      this.vrDisplay.requestAnimationFrame(() => {
+      this.animationDisplay = window;
+      window.requestAnimationFrame(() => {
           this.update();
       });
   }
 
   update(): void {
-    console.log(this.gyroscope);
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
       this.effect.render(this.scene, this.camera);
-      this.vrDisplay.requestAnimationFrame(() => {
+      this.animationDisplay.requestAnimationFrame(() => {
           this.update();
       });
-      // this.animationDisplay.requestAnimationFrame(() => {
-      //     this.update();
-      // });
+      this.rotatePlanets();
   }
 
     onResize(): void {
@@ -206,17 +131,17 @@ export class mapComponent implements OnInit {
 
     populatePlanets(){
       if (this.planets){
+        console.log("populating planets")
         for ( var i = 0; i < this.planets.length; i++ ) {
-          console.log("location", this.planets[i])
             let x = this.planets[i].location[0];
             let y = this.planets[i].location[1];
             let z = this.planets[i].location[2];
             let planetName = this.planets[i].name
             this.loader.load('../../assets/textures/'+this.planets[i].name+'.jpg', (texture) => {
-              console.log("loading")
-              let planet = this.createPlanet(0.25, texture);
+              let planet = this.createPlanet(0.85, texture);
               planet.position.set(x,y,z);
               planet.name = planetName;
+              planet.location={x,y,z};
               this.scene.add(planet);
             });
           }
@@ -225,18 +150,40 @@ export class mapComponent implements OnInit {
         console.log("planets haven't loaded yet")
       }
     }
-    // rotatePlanets(){
-    //   if (this.planets){
-    //       for ( var i = 0; i < this.planets.length; i++ ) {
-    //           console.log("rotating",this.planets[i])
-    //           this.planets[i].name.rotateY(0.01);
-    //         }
-    //   } else {
-    //     console.log("planets haven't loaded yet")
-    //   }
-    // }
+    rotatePlanets(){
+      for ( var i = 0; i < this.scene.children.length; i++ ) {
+        if (this.scene.children[i].name!=="sky"){
+          // console.log("rotating",this.scene.children[i])
+          this.scene.children[i].rotateY(0.01);
+
+        } else{
+          this.scene.children[i].rotateY(0.0005);
+        }
+      }
+    }
+    populatePeople(){
+      if (this.people){
+        console.log("populating people")
+        for ( var i = 0; i < this.people.length; i++ ) {
+            let x = this.people[i].location[0];
+            let y = this.people[i].location[1];
+            let z = this.people[i].location[2];
+            let personName = this.people[i].name
+            this.loader.load('../../assets/textures/planet7.jpg', (texture) => {
+              let person = this.createTraveller(0xff69b4);
+              person.position.set(x,y,z);
+              person.name = personName;
+              this.scene.add(person);
+            });
+          }
+
+      } else {
+        console.log("people haven't loaded yet")
+      }
+    }
 
     createSky(size, texture): THREE.Mesh {
+      console.log("creating sky")
         texture.wrapT = THREE.RepeatWrapping;
         let geometry = new THREE.SphereGeometry(size, size, size);
         let material = new THREE.MeshBasicMaterial({
@@ -249,21 +196,25 @@ export class mapComponent implements OnInit {
 
     //make planets
     createPlanet(size, texture): THREE.Mesh {
+      console.log("creating planets")
       var geometry = new THREE.SphereGeometry( size, size, size );
       var material = new THREE.MeshBasicMaterial( {map:texture} );
       return new THREE.Mesh( geometry, material );
     }
     createSpaceport(texture): THREE.Mesh{
+      console.log("creating a spaceport")
       var geometry = new THREE.BoxGeometry( .05, .05, .05 );
       var material = new THREE.MeshBasicMaterial( {map:texture} );
       return new THREE.Mesh( geometry, material );
     }
     createTraveller(color): THREE.Mesh{
-      var geometry = new THREE.SphereGeometry( .01, .01, .01 );
+      console.log("creating a traveller")
+      var geometry = new THREE.ConeBufferGeometry( .1, .1, .1 );
       var material = new THREE.MeshBasicMaterial( {color} );
       return new THREE.Mesh( geometry, material );
     }
     presentPopover(event, object) {
+      console.log("object name", object.name)
       let data = {'planet_name':object.name,'people_data': this.people, 'planets_data': this.planets, 'ports_data': this.ports}
       let popover = this.popoverCtrl.create(MapDetailComponent, data);
       popover.present({
@@ -271,12 +222,16 @@ export class mapComponent implements OnInit {
       });
     }
     onSelect(event) {
+      //TODO: change controls target to object location via lookAt()
+      //TODO: increase click radius for click events
+      console.log(this.mouse.x)
+      console.log(this.mouse.y)
     	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 ;
     	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.scene.children );
       for ( var i = 0; i < intersects.length; i++ ) {
-        if (intersects[i].object.name){
+        if (intersects[i].object.name!=="sky"){
           console.log("intersects", intersects[i].object.name);
           this.presentPopover(this.mouse, intersects[i].object);
         }
