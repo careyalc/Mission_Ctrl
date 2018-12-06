@@ -15,10 +15,10 @@ import VREffect from 'three-vreffect-module';
   encapsulation: ViewEncapsulation.None
 })
 export class mapComponent implements OnInit {
-  public people: any[];
-  public planets: any[];
-  public ports: any[];
-  public hidemap: boolean;
+  // public people: any[];
+  // public planets: any[];
+  // public ports: any[];
+  // public hidemap: boolean;
 
   @ViewChild('mapCanvas') mapCanvas;
 
