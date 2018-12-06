@@ -69,6 +69,7 @@ export class FirebaseProvider {
           type: childSnapshot.val().type,
           quantity: childSnapshot.val().quantity,
           cost: childSnapshot.val().cost,
+          comments: childSnapshot.val().comments,
         };
         this.ports.push(port);
       });
