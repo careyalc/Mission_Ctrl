@@ -71,8 +71,8 @@ export class ListViewComponent {
     //console.log(this.planets);
   }
 
-  private goToDetail() {
-    console.log("going to detail page");
-    this.navCtrl.push(ListDetailComponent);
+  private goToDetail(port) {
+    console.log(port);
+    this.navCtrl.push(ListDetailComponent, {"port" : port});
   }
 }

@@ -1,17 +1,35 @@
 <ion-header>
   <ion-navbar>
-    <ion-title class="headerItem">Name</ion-title>
+    <ion-title class="headerItem">{{port.key}}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <!-- <img [src]="{{planet.image}}"/>  -->
-  <!--  ^how would image/bame work if it could be a planet, port, or person?-->
-  <h2>Name Again</h2>
-  <p>Details details details</p>
-<ion-item>
-  <button ion-button clear icon-only item-end
-  (click)="takePic()">
-  <ion-icon name="camera"></ion-icon>
-  </button>
-</ion-item>
+  <img [src]="port.photo"/>
+  <!-- <img [src] = "PORT_IMAGE"/> -->
+  <ion-item>
+    <button ion-button clear icon-only item-end
+    (click)="takePic(port)">
+    <ion-icon name="camera"></ion-icon>
+    </button>
+  </ion-item>
+
+<div class="content">
+  <h1>{{port.key}}</h1>
+</div>
+
+<ion-list>
+  <ion-item>Type: {{port.type}}</ion-item>
+  <ion-item>Cost of Supplies: {{port.cost}} Galactic Units</ion-item>
+  <ion-item>Rating: {{port.rating}}</ion-item>
+  <ion-item>Location: {{port.planet}}</ion-item>
+</ion-list>
+
+<ng-container>
+  <h5>Comments:</h5>
+  <ion-textarea placeholder = "write a comment"></ion-textarea>
+  <!-- <ion-icon item-start name="add"></ion-icon> -->
+  <p>Other Comments:</p>
+  <p>{{port.comments}}</p>
+</ng-container>
+
 </ion-content>

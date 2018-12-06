@@ -7,6 +7,7 @@ import { FirebaseProvider } from '../../providers/firebase/firebase';
 
 const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
 const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
+const PORT_IMAGE: string = "/assets/imgs/sample_port.jpg";
 
 /**
  * Generated class for the ListDetailComponent component.
@@ -21,16 +22,18 @@ const SPINNER_IMAGE: string = "/assets/imgs/spinner.gif";
 export class ListDetailComponent {
 
   text: string;
-  private image = PLACEHOLDER_IMAGE;
+  private photo = PORT_IMAGE;
+  public port: any;
 
   constructor(
-    public navCtrl: NavController, private camera: Camera, private firebaseProvider: FirebaseProvider
+    public navCtrl: NavController, private camera: Camera, private firebaseProvider: FirebaseProvider, public navParams: NavParams
     ) {
-    console.log('Hello ListDetailComponent Component');
-    this.text = 'Hello World';
+    this.port = this.navParams.get("port");
+    console.log(this.port)
+    this.port.photo = PORT_IMAGE;
   }
 
-  private takePic() {
+  private takePic(port) {
       const options: CameraOptions = {
         quality: 100,
         destinationType: this.camera.DestinationType.DATA_URL, //Usually a URL is a pointer to some data, but a  DATA_URL is a URL that actually contains all of the data within it. Since we’re going to be transferring data from the Camera app to our own app, this is the most expedient option.
@@ -39,14 +42,22 @@ export class ListDetailComponent {
       }
       this.camera.getPicture(options).then((imageData) => {
         if (imageData) {
-          this.image = 'data:image/jpeg;base64,' + imageData;
+          console.log("taking a picture")
+          port.photo = 'data:image/jpeg;base64,' + imageData;
         } else {
-          this.image = PLACEHOLDER_IMAGE;
+          port.photo = PLACEHOLDER_IMAGE;
         }
        }, (err) => {
-          this.image = PLACEHOLDER_IMAGE;
+         if (port.photo == PLACEHOLDER_IMAGE) {
+           port.photo = PLACEHOLDER_IMAGE
+         } else {
+           port.photo = port.photo
+         }
        });
-      this.image = SPINNER_IMAGE;
-    }
+     }
+
+    // saveProfile(){
+    //   this.firebaseProvider.updateProfile(this.)
+    // }
 
 }
