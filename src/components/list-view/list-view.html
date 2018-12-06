@@ -1,29 +1,37 @@
 <ion-list>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="setFilteredItems()"></ion-searchbar>
+    <ion-searchbar
+    [(ngModel)]="searchTerm"
+    [showCancelButton]="shouldShowCancel" (ionInput)="setFilteredItems()"
+    (ionCancel)="onCancel($event)"
+    ></ion-searchbar>
   <ion-item>
     <button ion-button (click)="showPlanets()">Planets</button>
     <button ion-button (click)="showPeople()">People</button>
     <button ion-button (click)="showPorts()">Ports</button>
   </ion-item>
-  <ng-container *ngIf="listPeople">
-  <H1> People </H1>
-  <ion-item *ngFor="let person of people">
-    <p> {{person.name}} </p>
-  </ion-item>
+  <div class="list-body">
+    <ng-container *ngIf="listPeople">
+    <H1> People </H1>
+    <ion-card *ngFor="let person of people">
+      <ion-card-header> {{person.name}} </ion-card-header>
+      <p class="card-subtitle"> {{person.demeanor}} </p>
+      <p class="card-subtitle"> Location: {{person.location[0]}}, {{person.location[1]}}, {{person.location[2]}} </p>
+    </ion-card>
+    </ng-container>
+    <ng-container *ngIf="listPlanets">
+    <H1> Planets </H1>
+    <ion-card *ngFor="let planet of planets">
+      <ion-card-header> {{planet.name}} </ion-card-header>
+      <p class="card-subtitle"> Location: {{planet.location[0]}}, {{planet.location[1]}}, {{planet.location[2]}} </p>
+    </ion-card>
   </ng-container>
-  <ng-container *ngIf="listPlanets">
-  <H1> Planets </H1>
-  <ion-item *ngFor="let planet of planets">
-    <p> {{planet.name}} </p>
-    <p> Location: {{planet.x}}, {{planet.y}}, {{planet.z}} </p>
-  </ion-item>
-</ng-container>
-<ng-container *ngIf="listPorts">
-  <H1> Ports </H1>
-  <ion-item *ngFor="let port of searchCat">
-    <p> {{port.key}}</p>
-    <p> Supplies: {{port.type}}</p>
-    <p> Planet: {{port.planet}}</p>
-  </ion-item>
-</ng-container>
+  <ng-container *ngIf="listPorts">
+    <H1> Ports </H1>
+    <ion-card *ngFor="let port of ports">
+      <ion-card-header> {{port.key}}</ion-card-header>
+      <p class="card-subtitle"> Supplies: {{port.type}}</p>
+      <p class="card-subtitle"> Planet: {{port.planet}}</p>
+    </ion-card>
+  </ng-container>
+</div>
 </ion-list>

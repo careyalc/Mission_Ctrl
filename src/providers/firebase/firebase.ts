@@ -134,12 +134,14 @@ export class FirebaseProvider {
 // update money quantity on person
 
   public filterItems(searchTerm, searchCat){
+    console.log("searchCat",searchCat);
     let entriesClone = searchCat;
-    console.log(entriesClone);
+    console.log("clone",entriesClone);
+    console.log("search term",searchTerm);
     return entriesClone.filter((item) => {
       console.log(item.name.toLowerCase());
-    return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-});
+      return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+    });
   }
 
 }

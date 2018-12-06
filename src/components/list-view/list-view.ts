@@ -1,6 +1,6 @@
-import { Component, OnInit,  Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
-import { ViewController} from 'ionic-angular';
+import { ViewController } from 'ionic-angular';
 import { HomePage } from '../../pages/home/home';
 
 @Component({
@@ -16,23 +16,13 @@ export class ListViewComponent {
   private searchCat: any;
   private items: any;
 
-//   public people: any[];
-//   public planets: any[];
-//   public ports: any[];
-  private listPorts: boolean;
-  private listPeople: boolean;
-  private listPlanets: boolean;
-
+  private listPorts: boolean = false;
+  private listPeople: boolean = false;
+  private listPlanets: boolean = true;
 
   constructor(private firebaseProvider: FirebaseProvider) {
-
-   this.searchCat = this.planets;
-   this.listPorts = false;
-   this.listPeople = false;
-   this.listPlanets = true;
-
+    this.showPlanets();
   }
-
 
   showPlanets() {
     this.listPorts = false;
@@ -57,13 +47,14 @@ export class ListViewComponent {
 
   showFriendly() {
 
-    }
+  }
+
   setFilteredItems(): void {
     //console.log("testing");
-    if(this.listPlanets){
+    if (this.listPlanets) {
       this.planets = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
     }
-    if(this.listPeople){
+    if (this.listPeople) {
       this.people = this.firebaseProvider.filterItems(this.searchTerm, this.searchCat);
     }
     //console.log(this.planets);

@@ -6,8 +6,8 @@
       </button>
       <button class="headerItem" ion-button clear (click)="goToMapView()">Map</button>
       <button class="headerItem" ion-button clear (click)="goToListView()">List</button>
-      <button ion-button slot="end"  clear>
-        <ion-icon id="search" name="search"></ion-icon>
+      <button ion-button slot="end"  clear (click)="goToListView()">
+        <ion-icon id="search" name="search" ></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -21,7 +21,7 @@
     <ion-list>
       <ion-row class="profile-content">
         <img class="profile-image" src="../../assets/imgs/logo.png"/>
-        <h1 class= "profile-name" >User Name</h1>
+        <h1 class= "profile-name" ></h1>
       </ion-row>
       <ion-buttons class="menu-items">
         <button ion-button clear (click)="goToSupplies()" >Supply Status</button>
@@ -37,5 +37,5 @@
 
 <ion-content padding>
   <list-view [hidden]='hidelist' [people]="people" [ports]="ports" [planets]="planets" ></list-view>
-  <app-map [hidden]='hidemap' [people]="people" [ports]="ports" [planets]="planets"></app-map>
+  <app-map [hidden]='hidemap' [hidemap]="hidemap" [people]="people" [ports]="ports" [planets]="planets"></app-map>
 </ion-content>

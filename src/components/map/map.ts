@@ -15,6 +15,10 @@ import VREffect from 'three-vreffect-module';
   encapsulation: ViewEncapsulation.None
 })
 export class mapComponent implements OnInit {
+  public people: any[];
+  public planets: any[];
+  public ports: any[];
+  public hidemap: boolean;
 
   @ViewChild('mapCanvas') mapCanvas;
 
@@ -37,10 +41,12 @@ export class mapComponent implements OnInit {
   @Input() people;
   @Input() ports;
   @Input() planets;
+  @Input() hidemap;
 
   private loader: THREE.TextureLoader = new THREE.TextureLoader();
 
   constructor(public popoverCtrl: PopoverController) {
+
   }
 
   ngOnInit() {
@@ -53,7 +59,7 @@ export class mapComponent implements OnInit {
     setTimeout(()=>{
       this.populatePlanets();
       this.populatePeople();
-    }, 2000);
+    }, 2500);
 
     // create spaceports
     // loader.load('../../assets/textures/grass.jpg', (texture) => {
@@ -69,7 +75,8 @@ export class mapComponent implements OnInit {
 
     this.controls.standing = true;
     this.camera.position.y = this.controls.userHeight;
-    this.controls.target=new THREE.Vector3(-2.090743905901129 -0.5779857632670825 -2.3795666436257363);
+    this.camera.lookAt(this.scene.position)
+    this.controls.target=new THREE.Vector3(-2, 0, 0);
     this.effect.setSize(this.width, this.height);
 
 
@@ -89,18 +96,15 @@ export class mapComponent implements OnInit {
       console.log("testing click for iphone (click), Alex is it working?", e)
       this.onSelect(e);
     });
-    window.addEventListener( 'mouseclick', (e)=>{
-      console.log("testing click for iphone (mouseclick), Alex is it working?", e)
-      this.onSelect(e);
-    });
-    window.addEventListener( 'touchstart', (e)=>{
-      console.log("testing click for iphone (touchstart), Alex is it working?", e)
-      this.onSelect(e);
-    });
-
-    // window.addEventListener('touchend', (e)=>{
-    //   console.log("camera location",this.camera.rotation.x, this.camera.rotation.y, this.camera.rotation.z)
+    // window.addEventListener( 'mouseclick', (e)=>{
+    //   console.log("testing click for iphone (mouseclick), Alex is it working?", e)
+    //   this.onSelect(e);
     // });
+    // window.addEventListener( 'touchstart', (e)=>{
+    //   console.log("testing click for iphone (touchstart), Alex is it working?", e)
+    //   this.onSelect(e);
+    // });
+
   }
 
   initScene(texture): void {
@@ -121,6 +125,11 @@ export class mapComponent implements OnInit {
           this.update();
       });
       this.rotatePlanets();
+      if (this.hidemap == true){
+        this.controls.enabled = false;
+      } else {
+        this.controls.enabled = true;
+      }
   }
 
     onResize(): void {

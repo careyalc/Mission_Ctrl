@@ -23,6 +23,7 @@ export class HomePage {
   private hidemap: boolean = false;
   private hidelist: boolean = true;
   public data;
+  public person;
 
   constructor(public navCtrl: NavController, public menuCtrl: MenuController, private firebaseProvider: FirebaseProvider) {
     this.firebaseProvider.getObservable().subscribe(() => {
@@ -31,14 +32,19 @@ export class HomePage {
       this.ports = this.firebaseProvider.getPorts();
       this.planets = this.firebaseProvider.getPlanets();
       this.data = {'people_data': this.people, 'planets_data': this.planets, 'ports_data': this.ports}
+      this.person = this.people[0]
+      console.log(this.person.name)
+
     });
   }
   closeMenu(){
     this.menuCtrl.close();
+    this.hidemap = false;
     console.log("closing menu")
   }
   openMenu() {
     this.menuCtrl.open();
+    this.hidemap = false;
     console.log("opening menu")
   }
   goToListView(){
@@ -52,19 +58,24 @@ export class HomePage {
     //add border-bottom style change
   }
   goToSupplies() {
+    this.hidemap = true;
     this.navCtrl.push(SuppliesPage, {'data':this.data});
   }
   goToLocation() {
+    this.hidemap = true;
     this.navCtrl.push(LocationPage, {'data':this.data});
   }
   goToNearby() {
+    this.hidemap = true;
     this.navCtrl.push(NearbyPage, {'data':this.data});
   }
   goToMessages() {
+    this.hidemap = true;
     this.navCtrl.push(MessagesPage, {'data':this.data});
   }
   goToSettings() {
     console.log(this.data)
+    this.hidemap = true;
     this.navCtrl.push(SettingsPage, {'data':this.data});
   }
 }

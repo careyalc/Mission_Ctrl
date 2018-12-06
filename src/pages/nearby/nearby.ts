@@ -14,12 +14,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'nearby.html',
 })
 export class NearbyPage {
+  public people: any[];
+  public planets: any[];
+  public ports: any[];
+  public person: any[];
+  public data: any[];
+  public supplies: any[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad NearbyPage');
+    this.data = this.navParams.get('data');
+    // don't include current user in this list of people.
+    this.people = this.data['people_data'];
   }
 
 }
