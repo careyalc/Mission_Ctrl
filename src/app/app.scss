@@ -14,3 +14,20 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+app-map canvas{
+    margin: -78px 0 0 0;
+
+}
+.card {
+  padding: 16px;
+}
+.card-header {
+  font-size: 1.5em;
+  font-weight: 700;
+  padding: 10px 0;
+}
+.card-subtitle {
+  font-size: 1.0em;
+  font-style: italic;
+  color: #777;
+}

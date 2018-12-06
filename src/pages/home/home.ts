@@ -22,6 +22,8 @@ export class HomePage {
   public ports: any[];
   private hidemap: boolean = false;
   private hidelist: boolean = true;
+  public data;
+  public person;
 
   constructor(public navCtrl: NavController, public menuCtrl: MenuController, private firebaseProvider: FirebaseProvider) {
     this.firebaseProvider.getObservable().subscribe(() => {
@@ -29,45 +31,51 @@ export class HomePage {
       this.people = this.firebaseProvider.getPeople();
       this.ports = this.firebaseProvider.getPorts();
       this.planets = this.firebaseProvider.getPlanets();
+      this.data = {'people_data': this.people, 'planets_data': this.planets, 'ports_data': this.ports}
+      this.person = this.people[0]
+      console.log(this.person.name)
+
     });
   }
   closeMenu(){
     this.menuCtrl.close();
+    this.hidemap = false;
     console.log("closing menu")
   }
   openMenu() {
     this.menuCtrl.open();
+    this.hidemap = false;
     console.log("opening menu")
   }
   goToListView(){
     this.hidemap = true;
     this.hidelist = false;
-    // this.navCtrl.push(ListViewComponent,{
-    //   people:this.people,ports:this.ports,planets:this.planets
-    // })
     //add border-bottom style change
   }
   goToMapView(){
     this.hidelist = true;
     this.hidemap = false;
-    // this.navCtrl.push(mapComponent,{
-    //   people:this.people,ports:this.ports,planets:this.planets
-    // })
     //add border-bottom style change
   }
   goToSupplies() {
-    this.navCtrl.push(SuppliesPage);
+    this.hidemap = true;
+    this.navCtrl.push(SuppliesPage, {'data':this.data});
   }
   goToLocation() {
-    this.navCtrl.push(LocationPage);
+    this.hidemap = true;
+    this.navCtrl.push(LocationPage, {'data':this.data});
   }
   goToNearby() {
-    this.navCtrl.push(NearbyPage);
+    this.hidemap = true;
+    this.navCtrl.push(NearbyPage, {'data':this.data});
   }
   goToMessages() {
-    this.navCtrl.push(MessagesPage);
+    this.hidemap = true;
+    this.navCtrl.push(MessagesPage, {'data':this.data});
   }
   goToSettings() {
-    this.navCtrl.push(SettingsPage);
+    console.log(this.data)
+    this.hidemap = true;
+    this.navCtrl.push(SettingsPage, {'data':this.data});
   }
 }

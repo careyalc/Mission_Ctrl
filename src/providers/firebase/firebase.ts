@@ -46,15 +46,15 @@ export class FirebaseProvider {
         let person = {
           key: childSnapshot.key,
           name: childSnapshot.val().name,
-          active: childSnapshot.val().active,
+          status: childSnapshot.val().status,
           demeanor: childSnapshot.val().demeanor,
           money: childSnapshot.val().money,
           supplies: childSnapshot.val().supplies,
-          photo: childSnapshot.val().photo
+          photo: childSnapshot.val().photo,
+          location: childSnapshot.val().location
         };
         this.people.push(person);
       });
-      // console.log("people from service", this.people)
       this.notifySubscribers();
     });
     let portRef = this.db.ref('/ports');
@@ -63,6 +63,7 @@ export class FirebaseProvider {
       snapshot.forEach(childSnapshot => {
         let port = {
           key: childSnapshot.key,
+          comments: childSnapshot.val().comments,
           planet: childSnapshot.val().planet,
           rating: childSnapshot.val().rating,
           type: childSnapshot.val().type,
@@ -72,7 +73,6 @@ export class FirebaseProvider {
         };
         this.ports.push(port);
       });
-      // console.log("ports from service", this.ports)
       this.notifySubscribers();
     });
     let planetRef = this.db.ref('/planets');
@@ -83,15 +83,13 @@ export class FirebaseProvider {
           key: childSnapshot.key,
           name: childSnapshot.val().name,
           ports: childSnapshot.val().ports,
-          photo: childSnapshot.val().photo,
+          // photo: childSnapshot.val().photo,
           demeanor: childSnapshot.val().demeanor,
-          x: childSnapshot.val().x,
-          y: childSnapshot.val().y,
-          z: childSnapshot.val().z
+          location: childSnapshot.val().location,
+
         };
         this.planets.push(planet);
       });
-      // console.log("planets from service", this.planets)
       this.notifySubscribers();
     });
   }
@@ -105,20 +103,14 @@ export class FirebaseProvider {
   }
   public getPlanets():any[] {
     let entriesClone = this.planets;
-    // let entriesClone = JSON.parse(JSON.stringify(this.planets));
-    // console.log("Someone got my planets! They got: ", entriesClone);
     return entriesClone;
   }
   public getPeople():any[] {
     let entriesClone = this.people;
-    // let entriesClone = JSON.parse(JSON.stringify(this.people));
-    // console.log("Someone got my people! They got: ", entriesClone);
     return entriesClone;
   }
   public getPorts():any[] {
     let entriesClone = this.ports;
-    // let entriesClone = JSON.parse(JSON.stringify(this.ports));
-    // console.log("Someone got my ports! They got: ", entriesClone);
     return entriesClone;
   }
   private findSupplyByName(name: string): any {
@@ -141,13 +133,16 @@ export class FirebaseProvider {
 // update supply quantity on planet
 // update supply quantity on person
 // update money quantity on person
+
   public filterItems(searchTerm, searchCat){
+    console.log("searchCat",searchCat);
     let entriesClone = searchCat;
-    console.log(entriesClone);
+    console.log("clone",entriesClone);
+    console.log("search term",searchTerm);
     return entriesClone.filter((item) => {
       console.log(item.name.toLowerCase());
-    return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-});
+      return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+    });
   }
 
 }

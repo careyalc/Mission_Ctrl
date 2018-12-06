@@ -1,13 +1,12 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
-import { ViewController, PopoverController } from 'ionic-angular';
-
-import { HttpModule, Http } from '@angular/http';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { PopoverController } from 'ionic-angular';
+// import { HttpModule, Http } from '@angular/http';
 import { MapDetailComponent } from '../map-detail/map-detail';
 import * as THREE from 'three';
 import { Raycaster, Vector2 }  from 'three';
-import * as webvrui from 'webvr-ui';
-// import OrbitControls from 'three-orbitcontrols';
-import VRControls from 'three-vrcontrols-module';
+
+import OrbitControls from 'three-orbitcontrols';
+// import VRControls from 'three-vrcontrols-module';
 import VREffect from 'three-vreffect-module';
 
 @Component({
@@ -16,122 +15,122 @@ import VREffect from 'three-vreffect-module';
   encapsulation: ViewEncapsulation.None
 })
 export class mapComponent implements OnInit {
+  // public people: any[];
+  // public planets: any[];
+  // public ports: any[];
+  // public hidemap: boolean;
 
-    @ViewChild('mapCanvas') mapCanvas;
-    @Input() people;
-    @Input() ports;
-    @Input() planets;
+  @ViewChild('mapCanvas') mapCanvas;
 
-    private width: number = window.innerWidth;
-    private height: number = window.innerHeight;
+  private width: number = window.innerWidth;
+  private height: number = window.innerHeight;
 
-    private scene: THREE.Scene = new THREE.Scene();
-    private camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
-    private renderer: THREE.WebGLRenderer;
+  private scene: THREE.Scene = new THREE.Scene();
+  private camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, this.width/this.height, 0.1, 1000);
+  private renderer: THREE.WebGLRenderer;
 
-    private controls: VRControls = new VRControls(this.camera);
-    // private controls: OrbitControls = new OrbitControls(this.camera);
+  // private controls: VRControls = new VRControls(this.camera);
+  private controls: OrbitControls = new OrbitControls(this.camera);
 
-    private effect: VREffect;
-    private enterVR;
-    private animationDisplay;
+  private effect: VREffect;
+  private animationDisplay;
 
-    private raycaster = new THREE.Raycaster();
-    private mouse = new THREE.Vector2();
+  private raycaster = new THREE.Raycaster();
+  private mouse = new THREE.Vector2();
 
-    private planet1: THREE.Mesh;
-    private planet2: THREE.Mesh;
-    private planet3: THREE.Mesh;
-    private spaceport: THREE.Mesh;
-    private traveller: THREE.Mesh;
+  @Input() people;
+  @Input() ports;
+  @Input() planets;
+  @Input() hidemap;
 
-    constructor(private element: ElementRef, private ngRenderer: Renderer2, public popoverCtrl: PopoverController) {
-    }
+  private loader: THREE.TextureLoader = new THREE.TextureLoader();
 
-    ngOnInit() {
-        this.renderer = new THREE.WebGLRenderer({antialias: false, canvas: this.mapCanvas.nativeElement});
-        this.effect = new VREffect(this.renderer);
-        let loader: THREE.TextureLoader = new THREE.TextureLoader();
+  constructor(public popoverCtrl: PopoverController) {
 
-        this.renderer.vr.enabled = true;
-        this.renderer.setSize(this.width, this.height);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
+  }
 
-        // create planets - pull in all planets from database
-        // console.log()
-        loader.load('../../assets/textures/planet_1.jpg', (texture) => {
-            this.planet1 = this.createPlanet(0.15, texture);
-            this.planet1.position.set(-.3, 1.2, -1);
-            this.planet1.name = "planet1"
-            this.scene.add(this.planet1);
-        });
-        loader.load('../../assets/textures/planet_2.jpg', (texture) => {
-            this.planet2 = this.createPlanet(0.08, texture);
-            this.planet2.position.set(0, 3, -3);
-            this.planet2.name = "planet2"
-            this.scene.add(this.planet2);
-        });
-        loader.load('../../assets/textures/planet_3.jpg', (texture) => {
-            this.planet3 = this.createPlanet(0.05, texture);
-            this.planet3.position.set(0, 1, -1);
-            this.planet3.name = "planet3"
-            this.scene.add(this.planet3);
-        });
+  ngOnInit() {
+    this.renderer = new THREE.WebGLRenderer({antialias:true, canvas: this.mapCanvas.nativeElement});
+    this.effect = new VREffect(this.renderer);
+    this.renderer.vr.enabled = true;
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
 
-        // create spaceports
-        loader.load('../../assets/textures/grass.jpg', (texture) => {
-            this.spaceport = this.createSpaceport(texture);
-            this.spaceport.position.set(.075,.075,.075);
-            this.planet1.add(this.spaceport);
-        });
+    setTimeout(()=>{
+      this.populatePlanets();
+      this.populatePeople();
+    }, 2500);
 
-        // create travellers
-        this.traveller = this.createTraveller('rgb(0,0,0)');
-        this.traveller.position.set(2, this.controls.userHeight, -1);
-        this.scene.add(this.traveller);
+    // create spaceports
+    // loader.load('../../assets/textures/grass.jpg', (texture) => {
+    //     this.spaceport = this.createSpaceport(texture);
+    //     this.spaceport.position.set(.075,.075,.075);
+    //     this.planet1.add(this.spaceport);
+    // });
+    //
+    // // create travellers
+    // this.traveller = this.createTraveller('rgb(0,0,0)');
+    // this.traveller.position.set(2, this.controls.userHeight, -1);
+    // this.scene.add(this.traveller);
 
-        this.controls.standing = true;
-        this.camera.position.y = this.controls.userHeight;
+    this.controls.standing = true;
+    this.camera.position.y = this.controls.userHeight;
+    this.camera.lookAt(this.scene.position)
+    this.controls.target=new THREE.Vector3(-2, 0, 0);
+    this.effect.setSize(this.width, this.height);
 
-        this.effect.setSize(this.width, this.height);
 
-        loader.load('../../assets/textures/sky.jpg', (texture) => {
-            this.initScene(texture);
-        });
-        window.addEventListener('resize', () => {
-            this.onResize();
-        });
-        window.addEventListener('vrdisplaypresentchange', () => {
-            this.onResize();
-        });
-        window.addEventListener( 'click', (e)=>{
-          this.onSelect(e);
-        });
-    }
+    this.loader.load('../../assets/textures/sky.jpg', (texture) => {
+        this.initScene(texture);
+        console.log("sky loaded")
+    });
+    window.addEventListener('resize', () => {
+        this.onResize();
+        console.log("screen is being resized")
+    });
+    window.addEventListener('vrdisplaypresentchange', () => {
+        this.onResize();
+        console.log("detected VR display")
+    });
+    window.addEventListener( 'click', (e)=>{
+      console.log("testing click for iphone (click), Alex is it working?", e)
+      this.onSelect(e);
+    });
+    // window.addEventListener( 'mouseclick', (e)=>{
+    //   console.log("testing click for iphone (mouseclick), Alex is it working?", e)
+    //   this.onSelect(e);
+    // });
+    // window.addEventListener( 'touchstart', (e)=>{
+    //   console.log("testing click for iphone (touchstart), Alex is it working?", e)
+    //   this.onSelect(e);
+    // });
 
-    initScene(texture): void {
-        let skybox = this.createSky(15, texture);
-        this.scene.add(skybox);
+  }
 
-        this.animationDisplay = window;
-        window.requestAnimationFrame(() => {
-            this.update();
-        });
-    }
+  initScene(texture): void {
+      let skybox = this.createSky(20, texture);
+      skybox.name = "sky"
+      this.scene.add(skybox);
+      this.animationDisplay = window;
+      window.requestAnimationFrame(() => {
+          this.update();
+      });
+  }
 
-    update(): void {
-      //planet movements
-        this.planet1.rotateY(0.01);
-        this.planet2.rotateY(0.01);
-        this.planet3.rotateY(0.01);
-
-        this.controls.update();
-        this.renderer.render(this.scene, this.camera);
-        this.effect.render(this.scene, this.camera);
-        this.animationDisplay.requestAnimationFrame(() => {
-            this.update();
-        });
-    }
+  update(): void {
+      this.controls.update();
+      this.renderer.render(this.scene, this.camera);
+      this.effect.render(this.scene, this.camera);
+      this.animationDisplay.requestAnimationFrame(() => {
+          this.update();
+      });
+      this.rotatePlanets();
+      if (this.hidemap == true){
+        this.controls.enabled = false;
+      } else {
+        this.controls.enabled = true;
+      }
+  }
 
     onResize(): void {
         this.effect.setSize(this.width, this.height);
@@ -139,7 +138,61 @@ export class mapComponent implements OnInit {
         this.camera.updateProjectionMatrix();
     }
 
+    populatePlanets(){
+      if (this.planets){
+        console.log("populating planets")
+        for ( var i = 0; i < this.planets.length; i++ ) {
+            let x = this.planets[i].location[0];
+            let y = this.planets[i].location[1];
+            let z = this.planets[i].location[2];
+            let planetName = this.planets[i].name
+            this.loader.load('../../assets/textures/'+this.planets[i].name+'.jpg', (texture) => {
+              let planet = this.createPlanet(0.85, texture);
+              planet.position.set(x,y,z);
+              planet.name = planetName;
+              planet.location={x,y,z};
+              this.scene.add(planet);
+            });
+          }
+
+      } else {
+        console.log("planets haven't loaded yet")
+      }
+    }
+    rotatePlanets(){
+      for ( var i = 0; i < this.scene.children.length; i++ ) {
+        if (this.scene.children[i].name!=="sky"){
+          // console.log("rotating",this.scene.children[i])
+          this.scene.children[i].rotateY(0.01);
+
+        } else{
+          this.scene.children[i].rotateY(0.0005);
+        }
+      }
+    }
+    populatePeople(){
+      if (this.people){
+        console.log("populating people")
+        for ( var i = 0; i < this.people.length; i++ ) {
+            let x = this.people[i].location[0];
+            let y = this.people[i].location[1];
+            let z = this.people[i].location[2];
+            let personName = this.people[i].name
+            this.loader.load('../../assets/textures/planet7.jpg', (texture) => {
+              let person = this.createTraveller(0xff69b4);
+              person.position.set(x,y,z);
+              person.name = personName;
+              this.scene.add(person);
+            });
+          }
+
+      } else {
+        console.log("people haven't loaded yet")
+      }
+    }
+
     createSky(size, texture): THREE.Mesh {
+      console.log("creating sky")
         texture.wrapT = THREE.RepeatWrapping;
         let geometry = new THREE.SphereGeometry(size, size, size);
         let material = new THREE.MeshBasicMaterial({
@@ -152,21 +205,25 @@ export class mapComponent implements OnInit {
 
     //make planets
     createPlanet(size, texture): THREE.Mesh {
+      console.log("creating planets")
       var geometry = new THREE.SphereGeometry( size, size, size );
       var material = new THREE.MeshBasicMaterial( {map:texture} );
       return new THREE.Mesh( geometry, material );
     }
     createSpaceport(texture): THREE.Mesh{
+      console.log("creating a spaceport")
       var geometry = new THREE.BoxGeometry( .05, .05, .05 );
       var material = new THREE.MeshBasicMaterial( {map:texture} );
       return new THREE.Mesh( geometry, material );
     }
     createTraveller(color): THREE.Mesh{
-      var geometry = new THREE.SphereGeometry( .01, .01, .01 );
+      console.log("creating a traveller")
+      var geometry = new THREE.ConeBufferGeometry( .1, .1, .1 );
       var material = new THREE.MeshBasicMaterial( {color} );
       return new THREE.Mesh( geometry, material );
     }
     presentPopover(event, object) {
+      console.log("object name", object.name)
       let data = {'planet_name':object.name,'people_data': this.people, 'planets_data': this.planets, 'ports_data': this.ports}
       let popover = this.popoverCtrl.create(MapDetailComponent, data);
       popover.present({
@@ -174,12 +231,16 @@ export class mapComponent implements OnInit {
       });
     }
     onSelect(event) {
+      //TODO: change controls target to object location via lookAt()
+      //TODO: increase click radius for click events
+      console.log(this.mouse.x)
+      console.log(this.mouse.y)
     	this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1 ;
     	this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1 ;
       this.raycaster.setFromCamera( this.mouse, this.camera );
       var intersects = this.raycaster.intersectObjects( this.scene.children );
       for ( var i = 0; i < intersects.length; i++ ) {
-        if (intersects[i].object.name){
+        if (intersects[i].object.name!=="sky"){
           console.log("intersects", intersects[i].object.name);
           this.presentPopover(this.mouse, intersects[i].object);
         }
