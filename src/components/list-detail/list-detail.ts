@@ -30,7 +30,7 @@ export class ListDetailComponent {
     ) {
     this.port = this.navParams.get("port");
     console.log(this.port)
-    this.port.photo = PORT_IMAGE;
+  //  this.port.photo = PORT_IMAGE;
   }
 
   private takePic(port) {
@@ -44,6 +44,7 @@ export class ListDetailComponent {
         if (imageData) {
           console.log("taking a picture")
           port.photo = 'data:image/jpeg;base64,' + imageData;
+          this.firebaseProvider.updatePort(this.port);
         } else {
           port.photo = PLACEHOLDER_IMAGE;
         }
@@ -54,6 +55,7 @@ export class ListDetailComponent {
            port.photo = port.photo
          }
        });
+
      }
 
     // saveProfile(){

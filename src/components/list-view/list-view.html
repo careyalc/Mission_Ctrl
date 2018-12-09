@@ -12,7 +12,7 @@
   <div class="list-body">
     <ng-container *ngIf="listPeople">
     <H1> People </H1>
-    <ion-card *ngFor="let person of people" (click)="goToDetail()">
+    <ion-card *ngFor="let person of people">
       <ion-card-header> {{person.name}} </ion-card-header>
       <p class="card-subtitle"> {{person.demeanor}} </p>
       <p class="card-subtitle"> Location: {{person.location[0]}}, {{person.location[1]}}, {{person.location[2]}} </p>
@@ -20,14 +20,14 @@
     </ng-container>
     <ng-container *ngIf="listPlanets">
     <H1> Planets </H1>
-    <ion-card *ngFor="let planet of planets" (click)="goToDetail()">
+    <ion-card *ngFor="let planet of planets">
       <ion-card-header> {{planet.name}} </ion-card-header>
       <p class="card-subtitle"> Location: {{planet.location[0]}}, {{planet.location[1]}}, {{planet.location[2]}} </p>
     </ion-card>
   </ng-container>
   <ng-container *ngIf="listPorts">
     <H1> Ports </H1>
-    <ion-card *ngFor="let port of ports" (click)="goToDetail()">
+    <ion-card *ngFor="let port of ports" (click)="goToDetail(port)">
       <ion-card-header> {{port.key}}</ion-card-header>
       <p class="card-subtitle"> Supplies: {{port.type}}</p>
       <p class="card-subtitle"> Planet: {{port.planet}}</p>
