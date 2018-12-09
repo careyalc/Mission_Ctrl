@@ -3,6 +3,7 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { HomePage } from '../../pages/home/home';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { Events } from 'ionic-angular';
 // import { ListViewComponent } from '../components/list-view/list-view';
 
 const PLACEHOLDER_IMAGE: string = "/assets/imgs/placeholder.png";
@@ -24,13 +25,20 @@ export class ListDetailComponent {
   text: string;
   private photo = PORT_IMAGE;
   public port: any;
+  public rating: any;
 
   constructor(
-    public navCtrl: NavController, private camera: Camera, private firebaseProvider: FirebaseProvider, public navParams: NavParams
-    ) {
+    public navCtrl: NavController, private camera: Camera, private firebaseProvider: FirebaseProvider, public navParams: NavParams,
+    public events: Events) {
     this.port = this.navParams.get("port");
+    this.rating = this.port.rating;
     console.log(this.port)
-  //  this.port.photo = PORT_IMAGE;
+
+
+    events.subscribe('star-rating:changed', (starRating) => {
+       console.log(starRating);
+       this.rating = starRating;
+     });
   }
 
   private takePic(port) {
