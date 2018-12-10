@@ -11,14 +11,22 @@
 <ion-content padding>
 
   <ion-card *ngFor="let person of people">
-    <!-- add person photo -->
-    <ion-card-header>{{person.name}}</ion-card-header>
-    <p class='card-subtitle'>{{person.demeanor}}</p>
-    <p class='card-subtitle'>{{person.supplies}}</p>
-    <!-- add supply icons & quantity -->
-    <ion-avatar item-end>
-      <img src="../../assets/imgs/jarjar.jpeg">
-    </ion-avatar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-avatar item-end>
+            <img src="../../assets/imgs/jarjar.jpeg">
+          </ion-avatar>
+        </ion-col>
+        <ion-col>
+          <ion-card-header>{{person.name}}</ion-card-header>
+          <p class='card-subtitle'>{{person.demeanor}}</p>
+          <p class='card-subtitle'>Supplies: {{person.supplies}}</p>
+          <p class='card-subtitle'>Location: {{person.location}}</p>
+          <!-- add supply icons & quantity -->
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card>
 
 </ion-content>
