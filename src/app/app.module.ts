@@ -21,7 +21,7 @@ import { mapComponent } from '../components/map/map';
 import { ComponentsModule } from '../components/components.module'
 import { FirebaseProvider } from '../providers/firebase/firebase';
 import { Camera } from '@ionic-native/camera';
-
+import { StarRatingModule } from 'ionic3-star-rating';
 
 @NgModule({
   declarations: [
@@ -41,6 +41,7 @@ import { Camera } from '@ionic-native/camera';
     HttpModule,
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    StarRatingModule,
     ComponentsModule
   ],
   bootstrap: [IonicApp],

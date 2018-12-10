@@ -33,8 +33,6 @@ export class HomePage {
       this.planets = this.firebaseProvider.getPlanets();
       this.data = {'people_data': this.people, 'planets_data': this.planets, 'ports_data': this.ports}
       this.person = this.people[0]
-      console.log(this.person.name)
-
     });
   }
   closeMenu(){

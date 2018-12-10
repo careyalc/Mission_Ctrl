@@ -69,6 +69,7 @@ export class FirebaseProvider {
           type: childSnapshot.val().type,
           quantity: childSnapshot.val().quantity,
           cost: childSnapshot.val().cost,
+          photo: childSnapshot.val().photo
 
         };
         this.ports.push(port);
@@ -128,6 +129,21 @@ export class FirebaseProvider {
       }
     }
     return undefined;
+  }
+
+  public updatePort(port): void {
+    let parentRef = this.db.ref('/ports');
+    let childRef = parentRef.child(port.key);
+    childRef.set({
+      comments: port.comments,
+      cost: port.cost,
+      photo: port.photo,
+      planet: port.planet,
+      quantity: port.quantity,
+      rating: port.rating,
+      type: port.type
+    });
+
   }
 
 // update supply quantity on planet
